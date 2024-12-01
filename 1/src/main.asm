@@ -6,10 +6,15 @@ bits 16           ; Specify 16-bit mode (for x86 architecture)
 start: 
     jmp main          ; Jump to the main program execution
 
+
+
 ; Function to print a string (puts)
 puts:
     push si           ; Save SI register (source index) on stack
     push ax           ; Save AX register on stack
+
+
+
 
 .loop:
     lodsb             ; Load byte at DS:SI into AL (load string character)
