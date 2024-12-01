@@ -9,3 +9,5 @@ dd if=/dev/zero of=test.img bs=512 count=2880
 mkfs.fat -F 12 -n "NBOS" test.img
 mkfs.fat 4.2 (2021-01-31)
 mcopy -i test.img build/kernel.bin "::kernel.bin" 
+
+have to run export DISPLAY=$(hostname -I | awk '{print $1}'):0.0, before debug.sh?

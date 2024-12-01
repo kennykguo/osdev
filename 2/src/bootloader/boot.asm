@@ -8,9 +8,10 @@ bits  16           ; Specify 16-bit mode (for x86 architecture)
 ;
 jmp short start
 nop
+
 bdb_oem: db 'MSWIN4.1' ; 8 bytes
 dbd_bytes_per_sector: dw 512
-bdb_sectors_per_custer db 1
+bdb_sectors_per_cluster: db 1
 bdb_reserved_sectors: dw 1
 bdb_fat_count: db 2
 bdb_dir_entries_count: dw 0E0h
@@ -58,13 +59,16 @@ puts:
     jmp .loop         ; Jump back to the start of the loop
 
 .done:
+    pop bx
     pop ax            ; Restore AX register from stack
     pop si            ; Restore SI register from stack
     ret               ; Return from the function
 
+
+
+
 ; Main program
 main:
-    hlt               ; Halt the CPU (this is a basic halt, but before that, set up the environment)
     mov ax, 0         ; Set AX register to 0 (initialize)
     mov ds, ax        ; Set the Data Segment (DS) register to 0 (point to 0x0000)
     mov es, ax        ; Set the Extra Segment (ES) register to 0 (point to 0x0000)
@@ -72,15 +76,143 @@ main:
     mov ss, ax        ; Set the Stack Segment (SS) register to 0 (point to 0x0000)
     mov sp, 0x7C00    ; Set the Stack Pointer (SP) to 0x7C00 (top of the boot sector)
 
+    ; Read something from floppy disk
+    ; Bios should set DL to drive number
+    mov [ebr_drive_number], dl
+    mov ax, 1
+    mov cl, 1
+    mov bx, 0x7E00
+     call disk_read 
+
+
+
     mov si, msg_hello ; Load the address of the "Hello World!" message into SI
     call puts         ; Call puts function to display the message
 
+    cli
+    hlt
+
+
+floppy_error:
+    mov si, msg_read_failed
+    call puts
+    jmp wait_key_and_reboot
+
+wait_key_and_reboot:
+    mov ah, 0
+    int 16h
+    jmp 0FFFFh:0
+
+
 .halt:
-    jmp .halt         ; Infinite loop to halt the execution (after message is printed)
+    cli
+    hlt
+
+; Disk routines
+
+; Converts an LBA address to a CHS address
+; Parameters:
+;    - ax: LBDA address
+; Returns:
+;   -cx [0 to 5]: sector number
+;   -cx [bits 6-15]: cylinder
+;   -cx head
+
+
+lba_to_chs:
+    push ax
+    push dx
+
+
+    xor dx, dx
+    div word [bdb_sectors_per_track]
+
+    inc dx
+    mov cx, dx
+
+    xor dx,dx
+    div word[bdb_heads]
+
+    mov dh, dl
+    mov ch, al
+    shl ah, 6
+    or cl, ah
+
+    pop ax
+    mov dl, al
+    pop ax
+    ret
+
+
+;
+; Reads from a disk
+; Parameters:
+;   -ax: LBA address
+;   -cl: Number of sectors to read up to (128 max)
+;   -dl: drive number
+;   es:bx: memory address where to store data
+disk_read:
+    push ax
+    push bx
+    push cx
+    push dx
+    push di
+
+    push cx
+    call lba_to_chs
+    pop ax
+
+    mov ah, 02h
+    mov di, 3
+
+.retry:
+    pusha
+    stc
+    int 13h
+    jnc .done
+    popa
+    call disk_reset
+
+    dec di
+    test di, di
+    jnz .retry
+
+
+.fail:
+    ; Failed to boot
+    jmp floppy_error
+
+.done:
+    popa
+
+    pop di
+    pop dx
+    pop cx
+    pop bx
+    pop ax
+    ret
+
+
+; Resets the disk controller
+; Paraemters:
+; dl: drive number
+disk_reset:
+    pusha
+    mov ah, 0
+    stc
+    int 13h
+    jc floppy_error
+    popa
+    ret
+
+
 
 ; The message to display
 msg_hello: 
     db 'Hello world!', ENDL, 0  ; The message "Hello world!" followed by a newline and null terminator
+
+msg_read_failed:
+    db 'Read from disk failed', ENDL, 0
 
 times 510 - ($-$$) db 0  ; Fill the remaining space up to 510 bytes with 0 (for boot sector padding)
 dw 0AA55h               ; Boot signature (0xAA55) – required to identify the boot sector
