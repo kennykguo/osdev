@@ -1,56 +1,53 @@
-# Directories for .asm and .c files
-ASM_DIR = boot
-C_DIR = kernel
-OUT_DIR = .
+# Define source and header files
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
-# Tools
-NASM = nasm
-GCC = i386-elf-gcc
-LD = i386-elf-ld
-QEMU = qemu-system-i386
-NDISASM = ndisasm
-GDB = i386-elf-gdb
+# Create object files by replacing .c with .o in C_SOURCES
+OBJ = ${C_SOURCES:.c=.o}
 
-# First rule is the one executed when no parameters are fed to the Makefile
+# Specify paths for cross-compiler and GDB
+CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
+GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
+
+# GCC flags (including debugging symbols)
+CFLAGS = -g -gdwarf-3
+
 all: run
 
-# Kernel binary depends on the kernel object files
-$(OUT_DIR)/kernel.bin: $(OUT_DIR)/kernel_entry.o $(OUT_DIR)/kernel.o
-	$(LD) -o $@ -Ttext 0x1000 $^ --oformat binary
+# Default target: create os-image.bin by concatenating boot and kernel binaries
+os-image.bin: boot/boot.bin kernel.bin
+	cat $^ > os-image.bin
 
-# Compile the kernel entry assembly file
-$(OUT_DIR)/kernel_entry.o: $(ASM_DIR)/kernel_entry.asm
-	$(NASM) $< -f elf -o $@
+# Create kernel.bin using the linker (binary format, no symbols)
+kernel.bin: boot/kernel_entry.o ${OBJ}
+	i386-elf-ld -o $@ -Ttext 0x1000 $^ --oformat binary
 
-# Compile the kernel C file (with debugging symbols)
-$(OUT_DIR)/kernel.o: $(C_DIR)/kernel.c
-	$(GCC) -ffreestanding -g -c $< -o $@
+# Create kernel.elf for debugging (includes symbols)
+kernel.elf: boot/kernel_entry.o ${OBJ}
+	i386-elf-ld -g -o $@ -Ttext 0x1000 $^
 
-# Build the kernel ELF file (with debugging symbols, no standard library or runtime)
-$(OUT_DIR)/kernel.elf: $(OUT_DIR)/kernel.o
-	$(GCC) -ffreestanding -g -nostdlib -o $@ $^
+# Run QEMU with the os-image.bin disk image
+run: os-image.bin
+	qemu-system-i386 -fda os-image.bin
 
-# Rule to disassemble the kernel (useful for debugging)
-$(OUT_DIR)/kernel.dis: $(OUT_DIR)/kernel.bin
-	$(NDISASM) -b 32 $< > $@
+# Debug target: start QEMU with GDB remote debugging
+debug: os-image.bin kernel.elf
+	qemu-system-i386 -s -fda os-image.bin &
+	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
 
-# Compile the boot sector
-$(OUT_DIR)/boot.bin: $(ASM_DIR)/boot.asm
-	$(NASM) $< -f bin -o $@
+# Generic rule for compiling .c files to .o (with headers)
+%.o: %.c ${HEADERS}
+	${CC} ${CFLAGS} -ffreestanding -c $< -o $@
 
-# Create the final OS image by concatenating boot and kernel
-$(OUT_DIR)/os-image.bin: $(OUT_DIR)/boot.bin $(OUT_DIR)/kernel.bin
-	cat $^ > $@
+# Generic rule for assembling .asm files to .o
+%.o: %.asm
+	nasm $< -f elf -o $@
 
-# Run the OS image using QEMU
-run: $(OUT_DIR)/os-image.bin
-	$(QEMU) -fda $<
+# Generic rule for assembling .asm files to .bin
+%.bin: %.asm
+	nasm $< -f bin -o $@
 
-# Debugging with GDB and QEMU
-debug: $(OUT_DIR)/os-image.bin $(OUT_DIR)/kernel.elf
-	$(QEMU) -s -fda $< & \
-	$(GDB) -ex "target remote localhost:1234" -ex "symbol-file $(OUT_DIR)/kernel.elf"
-
-# Clean up build files
+# Clean target: remove generated files
 clean:
-	rm -f $(OUT_DIR)/*.bin $(OUT_DIR)/*.o $(OUT_DIR)/*.dis $(OUT_DIR)/kernel.elf
+	rm -rf *.bin *.dis *.o os-image.bin *.elf
+	rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o
