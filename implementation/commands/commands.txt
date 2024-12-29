@@ -1,0 +1,15 @@
+1.
+nasm -f bin boot.asm -o boot.bin
+qemu-system-x86_64 -drive format=raw,file=boot.bin
+
+The boot sector is REAL mode memory access
+
+
+https://wiki.osdev.org/GCC_Cross-Compiler#Linux_Users_building_a_System_Compiler
+https://wiki.osdev.org/Why_do_I_need_a_Cross_Compiler%3F
+https://wiki.osdev.org/GCC_Cross-Compiler#Introduction
+
+i386-elf-gcc -ffreestanding -c function.c -o function.o
+
+i386-elf-objdump -d function.o
+
