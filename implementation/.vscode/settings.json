@@ -1,5 +1,9 @@
 {
   "files.associations": {
-    "system_error": "cpp"
+    "system_error": "cpp",
+    "util.h": "c",
+    "idt.h": "c",
+    "screen.h": "c",
+    "*.tcc": "c"
   }
 }

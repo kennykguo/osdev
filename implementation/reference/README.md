@@ -1,61 +1,80 @@
-*Concepts you may want to Google beforehand: VGA character cells, screen offset*
+*Concepts you may want to Google beforehand: C types and structs, include guards, type attributes: packed, extern, volatile, exceptions*
 
-**Goal: Write strings on the screen**
+**Goal: Set up the Interrupt Descriptor Table to handle CPU interrupts**
 
-Finally, we are going to be able to output text on the screen. This lesson contains
-a bit more code than usual, so let's go step by step.
+This lesson and the following ones have been heavily inspired
+by [JamesM's tutorial](https://web.archive.org/web/20160412174753/http://www.jamesmolloy.co.uk/tutorial_html/index.html)
 
-Open `drivers/screen.h` and you'll see that we have defined some constants for the VGA
-card driver and three public functions, one to clear the screen and another couple
-to write strings, the famously named `kprint` for "kernel print"
-
-Now open `drivers/screen.c`. It starts with the declaration of private helper functions
-that we will use to aid our `kprint` kernel API.
-
-There are the two I/O port access routines that we learned in the previous lesson,
-`get` and `set_cursor_offset()`.
-
-Then there is the routine that directly manipulates the video memory, `print_char()`
-
-Finally, there are three small helper functions to transform rows and columns into offsets
-and vice versa.
-
-
-kprint_at
----------
-
-`kprint_at` may be called with a `-1` value for `col` and `row`, which indicates that
-we will print the string at the current cursor position.
-
-It first sets three variables for the col/row and the offset. Then it iterates through
-the `char*` and calls `print_char()` with the current coordinates.
-
-Note that `print_char` itself returns the offset of the next cursor position, and we reuse
-it for the next loop.
-
-`kprint` is basically a wrapper for `kprint_at`
-
-
-
-print_char
+Data types
 ----------
 
-Like `kprint_at`, `print_char` allows cols/rows to be `-1`. In that case it retrieves
-the cursor position from the hardware, using the `ports.c` routines.
+First, we will define some special data types in `cpu/types.h`,
+which will help us uncouple data structures for raw bytes from chars and ints.
+It has been carefully placed on the `cpu/` folder, where we will
+put machine-dependent code from now on. Yes, the boot code
+is specifically x86 and is still on `boot/`, but let's leave
+that alone for now.
 
-`print_char` also handles newlines. In that case, we will position the cursor offset
-to column 0 of the next row. 
+Some of the already existing files have been changed to use
+the new `u8`, `u16` and `u32` data types.
 
-Remember that the VGA cells take two bytes, one for the character itself and another one
-for the attribute.
+From now on, our C header files will also have include guards.
 
 
-kernel.c
---------
+Interrupts
+----------
 
-Our new kernel is finally able to print strings.
+Interrupts are one of the main things that a kernel needs to 
+handle. We will implement it now, as soon as possible, to be able
+to receive keyboard input in future lessons.
 
-It tests correct character positioning, spanning through multiple lines, line breaks,
-and finally it tries to write outside of the screen bounds. What happens then?
+Another examples of interrupts are: divisions by zero, out of bounds,
+invalid opcodes, page faults, etc.
 
-In the next lesson we will learn how to scroll the screen.
+Interrupts are handled on a vector, with entries which are
+similar to those of the GDT (lesson 9). However, instead of
+programming the IDT in assembly, we'll do it in C.
+
+`cpu/idt.h` defines how an idt entry is stored `idt_gate` (there need to be
+256 of them, even if null, or the CPU may panic) and the actual
+idt structure that the BIOS will load, `idt_register` which is 
+just a memory address and a size, similar to the GDT register.
+
+Finally, we define a couple variables to access those data structures
+from assembler code.
+
+`cpu/idt.c` just fills in every struct with a handler. 
+As you can see, it is a matter
+of setting the struct values and calling the `lidt` assembler command.
+
+
+ISRs
+----
+
+The Interrupt Service Routines run every time the CPU detects an 
+interrupt, which is usually fatal. 
+
+We will write just enough code to handle them, print an error message,
+and halt the CPU.
+
+On `cpu/isr.h` we define 32 of them, manually. They are declared as
+`extern` because they will be implemented in assembler, in `cpu/interrupt.asm`
+
+Before jumping to the assembler code, check out `cpu/isr.c`. As you can see,
+we define a function to install all isrs at once and load the IDT, a list of error
+messages, and the high level handler, which kprints some information. You
+can customize `isr_handler` to print/do whatever you want.
+
+Now to the low level which glues every `idt_gate` with its low-level and
+high-level handler. Open `cpu/interrupt.asm`. Here we define a common
+low level ISR code, which basically saves/restores the state and calls
+the C code, and then the actual ISR assembler functions which are referenced
+on `cpu/isr.h`
+
+Note how the `registers_t` struct is a representation of all the registers
+we pushed in `interrupt.asm`
+
+That's basically it. Now we need to reference `cpu/interrupt.asm` from our
+Makefile, and make the kernel install the ISRs and launch one of them.
+Notice how the CPU doesn't halt even though it would be good practice
+to do it after some interrupts.

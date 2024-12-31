@@ -13,3 +13,11 @@ i386-elf-gcc -ffreestanding -c function.c -o function.o
 
 i386-elf-objdump -d function.o
 
+%include "boot/print.asm"
+%include "boot/print_hex.asm"
+%include "boot/disk_load.asm"
+%include "boot/32-bit-gdt.asm"
+%include "boot/32-bit-print.asm"
+%include "boot/32-bit-switch.asm"
+
+https://wiki.osdev.org/8259_PIC
