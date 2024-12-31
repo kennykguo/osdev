@@ -4,6 +4,8 @@
     "util.h": "c",
     "idt.h": "c",
     "screen.h": "c",
-    "*.tcc": "c"
+    "*.tcc": "c",
+    "memory": "cpp",
+    "isr.h": "c"
   }
 }
