@@ -10,10 +10,10 @@
 ; ==================================================================
 
 
-	BITS 16
+BITS 16
 
-	jmp short bootloader_start	; Jump past disk description section
-	nop				; Pad out before disk description
+jmp short bootloader_start	; Jump past disk description section
+nop				; Pad out before disk description 0> ensures alignment
 
 
 ; ------------------------------------------------------------------
@@ -21,7 +21,7 @@
 ; Note: some of these values are hard-coded in the source!
 ; Values are those used by IBM for 1.44 MB, 3.5" diskette
 
-OEMLabel		db "MIKEBOOT"	; Disk label
+OEMLabel		db "KENNYBOOT"	; Disk label
 BytesPerSector		dw 512		; Bytes per sector
 SectorsPerCluster	db 1		; Sectors per cluster
 ReservedForBoot		dw 1		; Reserved sectors for boot record

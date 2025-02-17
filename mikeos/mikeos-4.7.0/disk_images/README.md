@@ -15,3 +15,6 @@ In Linux/Unix, you can create a new floppy image with this command:
 
 The build-linux.sh script does this if it doesn't find mikeos.flp.
 
+mikeos.flp -- Floppy disk image containing MikeOS and programs
+mikeos.dmg -- Same as above, but with a Mac-friendly extension
+mikeos.iso -- CD ISO image built using the floppy disk image
