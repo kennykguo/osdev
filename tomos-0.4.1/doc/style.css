@@ -1,0 +1,108 @@
+
+body{
+    font-size: 13pt;
+    background-color: #DDDDDD;
+}
+
+.section_list{}
+
+.select{
+    background-color: grey;
+}
+
+.section_list p{
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:1em;
+    padding:0;
+}
+
+.section_table{
+    width:80%;
+    clear:both;
+    
+}
+
+.section_table tr td.name{
+    width:14em;
+    vertical-align:top;
+}
+
+.section_table tr td.description{
+    vertical-align:top;
+}
+
+.section_table tr td p{
+    margin:0;
+    padding:0;
+}
+
+.section_table tr td.name p, p.funclink{
+    margin: 0.3em 1em 0.3em 1em;
+    padding:0;
+}
+
+.section_table tr td.name p, p.funclink a{
+    padding:0;
+    margin:0;
+}
+
+.input, .output , .section, .see, .note{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+}
+
+.input p, .output p {
+    font-style:italic;
+    margin: 0;
+}
+
+.input .param, .output .param {
+    margin-left: 1em;
+}
+
+.description{
+    margin:0;
+    margin-left:1em;
+}
+
+h4.title{
+    margin:0;
+}
+
+ul.mainmenu {
+    margin: 0;
+    padding:0;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+    list-style-type: none;
+    width: 100%;
+}
+
+ul.mainmenu li{
+    float:left;
+    display:span;
+    width: 20%;
+}
+
+ul.mainmenu li a{
+    display: block;
+    text-align: center;
+}
+
+#index p{
+    margin: 1em 3em 0em 3em;
+    clear:both;
+}
+
+#index h4, #index h3, #index h2{
+    padding: 0;
+    width:100%;
+    text-align: center;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    float:left;
+}
+

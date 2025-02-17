@@ -1,0 +1,661 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="os_fat.asm">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class="select"><a href="files.html">Files</a></li>
+<li class=""><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both">
+<table>
+<tr><td>
+		<h2 class="header">os_fat.asm</h2>
+</td></tr>
+<tr><td>
+<p class="description"></p>
+</td></tr>
+</table>
+<table class="section_table">
+<tr><td celspan="2"><h3>Function list</h3></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_file_write">os_file_write</a></p></td><td>Save (max 64K) file to disk</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_file_exists">os_file_exists</a></p></td><td>Check for presence of file on the floppy</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_convert_filename_d2f">_os_fat_convert_filename_d2f</a></p></td><td>Converts filename from fat format to dot format</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_convert_filename_f2d">_os_fat_convert_filename_f2d</a></p></td><td>Converts filename from fat format to dot format</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_file_get_free_FAT_entry">_os_file_get_free_FAT_entry</a></p></td><td>Get a pointer of a free entry in the FAT table</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_create_empty_FAT_entry">_os_fat_create_empty_FAT_entry</a></p></td><td>Creates a new 0-byte file on the floppy disk</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_remove_file">os_remove_file</a></p></td><td>Deletes the specified file from the filesystem</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_rename_file">os_rename_file</a></p></td><td>Change the name of a file on the disk</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_get_file_size">os_get_file_size</a></p></td><td>Get file size information for specified file</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_disk_get_root_entry">_os_disk_get_root_entry</a></p></td><td>Search RAM copy of root dir for file entry</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_disk_read_fat">_os_disk_read_fat</a></p></td><td>Read FAT entry from floppy into os_buffer</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_disk_write_fat">_os_disk_write_fat</a></p></td><td>Save FAT contents from os_buffer in RAM to disk</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_disk_read_root_dir">_os_disk_read_root_dir</a></p></td><td>Get the root directory contents</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_disk_write_root_dir">_os_disk_write_root_dir</a></p></td><td>Write root directory contents from os_buffer to disk</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_disk_reset_floppy">_os_disk_reset_floppy</a></p></td><td>Reset floppy drive</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_root_dir_size">_os_fat_get_root_dir_size</a></p></td><td>Return a size of root directory</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_data_region">_os_fat_get_data_region</a></p></td><td>Return first sector of data region</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_root_dir_region">_os_fat_get_root_dir_region</a></p></td><td>Gets the first section number of the root directory</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_root_directory">_os_fat_get_root_directory</a></p></td><td>Copy the root directory to the buffer.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_FAT_table_region">_os_fat_get_FAT_table_region</a></p></td><td>Return the fisrt sector of FAT table</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_FAT_table">_os_fat_get_FAT_table</a></p></td><td>Copy fat table to the buffer</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_get_disk_description_table">_os_get_disk_description_table</a></p></td><td>Return first sector of root directory</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_set_cluster">_os_fat_set_cluster</a></p></td><td>Set a 12 bit value under a specigied cluster in the FAT...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_calculate_next_cluster">_os_fat_calculate_next_cluster</a></p></td><td>Calculate next cluster</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_first_sector_of_cluster">_os_fat_get_first_sector_of_cluster</a></p></td><td>Translates cluster number to the cector number</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_cluster_size_bytes">_os_fat_get_cluster_size_bytes</a></p></td><td>Return a cluster size in bytes</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_disk_convert_l2hts">_os_disk_convert_l2hts</a></p></td><td>Calculate head, track and sector for int 13h</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_number_of_clusters">_os_fat_get_number_of_clusters</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_cluster">_os_fat_get_cluster</a></p></td><td>Get n-th cluster of the file</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_copy_cluster">_os_fat_copy_cluster</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_copy_block">_os_fat_copy_block</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_entity">_os_fat_get_entity</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_entity_by_index">_os_fat_get_entity_by_index</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_setup">_os_fat_setup</a></p></td><td>Setup FAT12 filesystem env</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_change_active_dir">_os_fat_change_active_dir</a></p></td><td>Change a directory. Directory must exist in an active...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_change_working_dir">_os_fat_change_working_dir</a></p></td><td>Change a directory. Directory must exist in an active...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_get_jump_index">_os_fat_get_jump_index</a></p></td><td>Get direction of jump in a directory treedirectory  ..  is ...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_open_dir">_os_fat_open_dir</a></p></td><td>Open a directory to read</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_dir_next_file">_os_fat_dir_next_file</a></p></td><td>Get file FAT12_ENTITY from the opened directory</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_root_dir_reload_buffer">_os_fat_root_dir_reload_buffer</a></p></td><td>Reload buffer for direcory entities stored by HDIR_STRUC</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_dir_reload_buffer">_os_fat_dir_reload_buffer</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_close_dir">_os_fat_close_dir</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_create_empty_HDIR">_os_fat_create_empty_HDIR</a></p></td><td>Create empty HDIR_STRUCT instance</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_fat_dir_calculate_num_ent">_os_fat_dir_calculate_num_ent</a></p></td><td></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_dir_open">os_dir_open</a></p></td><td>Open a directory</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_dir_next_file">os_dir_next_file</a></p></td><td>Get a file from the opened directory.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_dir_close">os_dir_close</a></p></td><td>Close a directory</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_dir_change">os_dir_change</a></p></td><td>Change a directory</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_file_convert_f2d">os_file_convert_f2d</a></p></td><td>Converts filename from fat format to dot format</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_file_convert_d2f">os_file_convert_d2f</a></p></td><td>Converts filename from dot format to fat format</td></tr>
+</table>
+		<h3>Descriptions</h3>
+		<h4 id="os_file_write" class="title">os_file_write</h4>
+		<p class="description">Save (max 64K) file to disk</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - filename, </div>
+			<div class="param">BX - data location, </div>
+			<div class="param">CX - bytes to write</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Carry clear if OK, set if failure</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_file_exists" class="title">os_file_exists</h4>
+		<p class="description">Check for presence of file on the floppy</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX = filename location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">carry clear if found, set if not</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="_os_fat_convert_filename_d2f" class="title">_os_fat_convert_filename_d2f</h4>
+		<p class="description">converts filename from fat format to dot format</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - destination buffer ( 11 bytes)</div>
+			<div class="param">DS:SI - dot format</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_convert_filename_f2d" class="title">_os_fat_convert_filename_f2d</h4>
+		<p class="description">converts filename from fat format to dot format</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - destination buffer (min 13 bytes)</div>
+			<div class="param">DS:SI - FAT format</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_file_get_free_FAT_entry" class="title">_os_file_get_free_FAT_entry</h4>
+		<p class="description">get a pointer of a free entry in the FAT table</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - pointer to the FAT free entry.</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_create_empty_FAT_entry" class="title">_os_fat_create_empty_FAT_entry</h4>
+		<p class="description">Creates a new 0-byte file on the floppy disk</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - location of filename</div>
+			<div class="param">DI - location of the entry to fill</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="os_remove_file" class="title">os_remove_file</h4>
+		<p class="description">Deletes the specified file from the filesystem</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX = location of filename to remove</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_rename_file" class="title">os_rename_file</h4>
+		<p class="description">Change the name of a file on the disk</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX = filename to change</div>
+			<div class="param">BX = new filename (zero-terminated strings)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">carry set on error</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_get_file_size" class="title">os_get_file_size</h4>
+		<p class="description">Get file size information for specified file</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX = filename</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">BX = file size in bytes (up to 64K) or carry set if file not found</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="_os_disk_get_root_entry" class="title">_os_disk_get_root_entry</h4>
+		<p class="description">Search RAM copy of root dir for file entry</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX = filename</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">DI = location in os_buffer of root dir entry or carry set if file not found</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_disk_read_fat" class="title">_os_disk_read_fat</h4>
+		<p class="description">Read FAT entry from floppy into os_buffer</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">carry set if failure</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_disk_write_fat" class="title">_os_disk_write_fat</h4>
+		<p class="description">Save FAT contents from os_buffer in RAM to disk</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">FAT in os_buffer</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">carry set if failure</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_disk_read_root_dir" class="title">_os_disk_read_root_dir</h4>
+		<p class="description">Get the root directory contents</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">root directory contents in os_buffer, carry set if error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_disk_write_root_dir" class="title">_os_disk_write_root_dir</h4>
+		<p class="description">Write root directory contents from os_buffer to disk</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">root dir copy in os_buffer;</div>
+			<div class="param">DS:SI - FAT table to write</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">carry set if error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_disk_reset_floppy" class="title">_os_disk_reset_floppy</h4>
+		<p class="description">Reset floppy drive</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">carry flag set on error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_root_dir_size" class="title">_os_fat_get_root_dir_size</h4>
+		<p class="description">return a size of root directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">: AX - size of root directory in sectors</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_data_region" class="title">_os_fat_get_data_region</h4>
+		<p class="description">return first sector of data region</p>
+		<div class="input">
+		<p>INPUT:</p>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">: AX - first sector number of root directory</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_root_dir_region" class="title">_os_fat_get_root_dir_region</h4>
+		<p class="description">gets the first section number of the root directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX first sector of root directory</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_root_directory" class="title">_os_fat_get_root_directory</h4>
+		<p class="description">copy the root directory to the buffer.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:BX buffer for the directory</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">if success AX=1 otherwise AX=0</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">the size of buffer can be fetch by os_root_dir_get_size_bytes</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_FAT_table_region" class="title">_os_fat_get_FAT_table_region</h4>
+		<p class="description">return the fisrt sector of FAT table</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX number of fat table</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX= 1 if ok ,0 if error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_FAT_table" class="title">_os_fat_get_FAT_table</h4>
+		<p class="description">copy fat table to the buffer</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">: DS:SI - buffer for the table</div>
+			<div class="param">DX number of fat table</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX= 1 if ok ,0 if error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_get_disk_description_table" class="title">_os_get_disk_description_table</h4>
+		<p class="description">return first sector of root directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">: ES:BX - buffer for description table</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">: Nothing</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">: minimum size of buffer is SIZE_OF_DISK_DESCRIPTION_TABLE</div>
+		</div>
+		<div class="section">Section : floppy</div>
+		<h4 id="_os_fat_set_cluster" class="title">_os_fat_set_cluster</h4>
+		<p class="description">set a 12 bit value under a specigied cluster in the FAT table</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - cluster</div>
+			<div class="param">BX - data to save</div>
+			<div class="param">ES:DI - FAT table</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - cluster</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_calculate_next_cluster" class="title">_os_fat_calculate_next_cluster</h4>
+		<p class="description">calculate next cluster</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - cluster</div>
+			<div class="param">ES:DI - FAT table</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - next cluster</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_first_sector_of_cluster" class="title">_os_fat_get_first_sector_of_cluster</h4>
+		<p class="description">translates cluster number to the cector number</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - cluster number</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - first sector number of the cluster</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_cluster_size_bytes" class="title">_os_fat_get_cluster_size_bytes</h4>
+		<p class="description">return a cluster size in bytes</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - cluster size in bytes</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_disk_convert_l2hts" class="title">_os_disk_convert_l2hts</h4>
+		<p class="description">Calculate head, track and sector for int 13h</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">logical sector in AX</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">correct registers for int 13h</div>
+		</div>
+		<div class="section">Section : floppy</div>
+		<h4 id="_os_fat_get_number_of_clusters" class="title">_os_fat_get_number_of_clusters</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - FAT12_83FILEFORMAT entity address</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - number of clusters taken by the file</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_cluster" class="title">_os_fat_get_cluster</h4>
+		<p class="description">get n-th cluster of the file</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - FAT12_83FILEFORMAT entity address</div>
+			<div class="param">AX - index of a cluster to get</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - cluster number, if AX = 0FFFFh means out of file.</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_copy_cluster" class="title">_os_fat_copy_cluster</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - cluster number</div>
+			<div class="param">ES:DI destination (must be greater by cluster)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX = 1 success, AX = 0 fail</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_copy_block" class="title">_os_fat_copy_block</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - FAT12_83FILEFORMAT entity address</div>
+			<div class="param">ES:DI - destination</div>
+			<div class="param">DX - block size</div>
+			<div class="param">BX - start address</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - number of copied bytes, if less than DX means eof. AX = 0FFFFh fails</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_entity" class="title">_os_fat_get_entity</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - name of the entity to get</div>
+			<div class="param">ES:DI - pointer to the structure FAT12_83FILEFORMAT</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX =1 and structure pointed by ES:DI is filled, AX = file does not exists</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_entity_by_index" class="title">_os_fat_get_entity_by_index</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - name of the entity to get</div>
+			<div class="param">ES:DI - pointer to the structure FAT12_83FILEFORMAT</div>
+			<div class="param">DS:BX - BIOS Parameter Block</div>
+			<div class="param">DX - index</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX =1 and structure pointed by ES:DI is filled, AX = file does not exists</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_setup" class="title">_os_fat_setup</h4>
+		<p class="description">setup FAT12 filesystem env</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_change_active_dir" class="title">_os_fat_change_active_dir</h4>
+		<p class="description">change a directory. Directory must exist in an active directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - string with directory name, 0xFFFF back to root dir</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success; 0 error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_change_working_dir" class="title">_os_fat_change_working_dir</h4>
+		<p class="description">change a directory. Directory must exist in an active directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - string with directory name, 0xFFFF back to root dir</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success; 0 error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_get_jump_index" class="title">_os_fat_get_jump_index</h4>
+		<p class="description">get direction of jump in a directory treedirectory  ..  is  -1directory  . is 0directory the rest is 1</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - address of a filenam in FAT12 format</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - index</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_open_dir" class="title">_os_fat_open_dir</h4>
+		<p class="description">open a directory to read</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - directory to open, if si == 0FFFFh open working</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success ES:DI opened dir instance, AX - 0 fails</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_dir_next_file" class="title">_os_fat_dir_next_file</h4>
+		<p class="description">get file FAT12_ENTITY from the opened directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - HDIR instance returned by os_fat_open_dir</div>
+			<div class="param">DS:SI - pointer to the FAT12_ENTITY</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success and DS:SI contains file info, AX = 0 no more file in the directory, AX - 0FFFFh error</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_root_dir_reload_buffer" class="title">_os_fat_root_dir_reload_buffer</h4>
+		<p class="description">reload buffer for direcory entities stored by HDIR_STRUC</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - HDIR_STRUC instance returned by _os_fat_open_dir</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success, AX - 0 fails.</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_dir_reload_buffer" class="title">_os_fat_dir_reload_buffer</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - HDIR_STRUC instance returned by _os_fat_open_dir</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success, AX - 0 fails</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_close_dir" class="title">_os_fat_close_dir</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - HDIR_STRUC instance returned by _os_fat_open_dir</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_create_empty_HDIR" class="title">_os_fat_create_empty_HDIR</h4>
+		<p class="description">create empty HDIR_STRUCT instance</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX = 1 success and ES:DI instance, AX = 0 fail</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="_os_fat_dir_calculate_num_ent" class="title">_os_fat_dir_calculate_num_ent</h4>
+		<p class="description"></p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI 	</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param"></div>
+		</div>
+		<div class="section">Section : FAT12</div>
+		<h4 id="os_dir_open" class="title">os_dir_open</h4>
+		<p class="description">open a directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - pointer with a directory name, if SI = 0FFFF open working directory</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success ES:DI opened dir instance, AX - 0 fails</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_dir_next_file" class="title">os_dir_next_file</h4>
+		<p class="description">get a file from the opened directory.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - opened directory instance returned by os_dir_open</div>
+			<div class="param">DS:SI - FAT12_ENTITY structure pointer</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success, AX - 0 no more files to get, AX - 0FFFFh other error</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_dir_close" class="title">os_dir_close</h4>
+		<p class="description">close a directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - opened directory instance returned by os_dir_open</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_dir_change" class="title">os_dir_change</h4>
+		<p class="description">change a directory</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DS:SI - directory name, if SI = 0FFFFh go to root dir</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 1 success, AX - 0 fails (directory does not exists)</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_file_convert_f2d" class="title">os_file_convert_f2d</h4>
+		<p class="description">converts filename from fat format to dot format</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - destination buffer (min 13 bytes)</div>
+			<div class="param">DS:SI - FAT format</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_file_convert_d2f" class="title">os_file_convert_d2f</h4>
+		<p class="description">converts filename from dot format to fat format</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - destination buffer ( 11 bytes)</div>
+			<div class="param">DS:SI - dot format</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : files</div>
+</div>
+	</body>
+</html>

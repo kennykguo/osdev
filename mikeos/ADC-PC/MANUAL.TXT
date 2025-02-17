@@ -1,0 +1,801 @@
+=============================================================================
+
+          Construction And Operation Manual For The ADC On MikeOS.
+          --------------------------------------------------------
+
+  Preface:-
+  ---------
+
+Apologies to everyone for any typos and/or grammatical errors that may be
+inside this manual as it was not spell ckecked nor grammar checked. If there
+are any serious errors then contact me on my Email aaddress at the end of
+this manual.
+
+Every effort has been made to be as accurate as possible in the building of
+this project and I have checked amd rechecked the important sections and I
+am unable to see any construction errors. Now have fun with this tool and
+start doing things for yourself... :)
+
+This project was developed for MikeOS, (an Operating System, (OS), designed
+as a teaching aid as to how OSs work and are developed). It is a simple ADC,
+(Analogue to Digital Converter), that works through the Parallel Port running
+in Standard Mode. This makes the project compliant with ALL PC Parallel Ports
+and therefore usable on old machines as well as this current Quad Core
+machine of mine that I develop on. And YES, this current machine, 07-01-2010,
+has got a Parallel Port, AND, Serial Port; (in another project the Serial
+Port is going to be used to demonstrate Arduino Board access, so that you can
+create projects of your own).
+
+The ADC is built on Stripboard/Veroboard to allow youngsters the chance to
+have a go without the need for special tools or board making extras. :)
+
+The ADC Integrated Circuit, (IC), is a(n) ~ADC0804LCN~ and is readily
+available from various sources in a DIL, (Dual In-Line), package. It is very,
+very cheap and tolerant to user "abuse", therefore almost indestructable! ;oO
+(Sweeping statement!... :)
+
+With the absolute limitations of the OS itself, AND, the BASIC interpreter
+itself you will see that EVEN with these limitations something serious CAN
+be developed for it.
+
+This project will culminate into a simple 0 - 5 Volt Voltmeter in this case,
+BUT, with some simple BASIC code additions and alterations, along with extra
+home built add-on hardware, can become an, Ammeter, Powermeter, Thermometer,
+etc......
+
+Now have some childish fun and learn how to build stuff for yourself, both
+hardware, AND, software wise...
+
+Enjoy finding simple solutiuons to often very difficult problems... :)
+
+Bazza, G0LCU... :)
+
+-----------------------------------------------------------------------------
+
+  Where To Start:-
+  ----------------
+
+This project uses standard tools and methods to build it. If you are unsure
+about using a soldering iron and other basic tools then go to your local
+library for more information on the subjects. IF you have access to the WWW,
+(World Wide Web), then searching for information will be made easy using
+a search facility, (engine), such as GOOGLE.
+
+NOTE...
+
+This is primarily aimed at the youngster of around 10 years of age, but hey,
+anyone is invited to build it and learn how to do things for themselves
+instead of having everything already done for them...
+
+No serious knowledge of electronics is required, but it is expected that a
+electrical and mechanical safety is known about and adhered to. However it
+is assumed that you can read a simple circuit diagram however and build from
+that circuit on to stripboard or Veroboard without the aid of drawings.
+
+This project DOES have photographs of the stripboard layout but not drawn
+layouts as I feel that the photo`s are enough to get you going.
+
+As for MikeOS this project was originally developed for Version 4 but at the
+time of writing Version 4.1b1 has arrived so it should work on that too
+without any changes.
+
+Enjoy...
+
+-----------------------------------------------------------------------------
+
+  Roughly, How Does It Work:-
+  ---------------------------
+
+Because Standard Parallel Ports, (SPP), cannot accept 8, (eight), bit data
+through the DATA lines as INPUT then only the dedicated STATUS lines can be
+used. The problem is that there are only 4, (four), useful lines that can be
+used for this project.
+
+I decided not to use a serial type ADC like TLC549 because I didn`t have one
+but I had a(n) ADC0804LCN parallel connected type in my junk box instead.
+At the time of writing see:-
+
+  http://www.intersil.com/data/fn/fn3094.pdf
+
+For more information on the ADC0804LCN IC and how it works...
+
+If you are not sure how Analogue to Digital Conversion is done and want to
+know more then here is a good starting point, also at the time of writing...
+
+  http://en.wikipedia.org/wiki/Analog-to-digital_converter
+
+The CD4019BCN is used to give 2, (two), lots of 4, (four), bits, also known
+as NIBBLEs, into the above STATUS lines; that is bits 4, 5, 6 and 7 as the
+first chunk and bits 0, 1, 2 and 3 as the second chunk. These two chunks can
+be software controlled back into an 8 bit data byte again identical to the 8
+bit lines an the ADC IC.
+Also at the time of writing see:-
+
+  http://www.datasheetcatalog.org/datasheets/70/108826_DS.pdf
+
+For more information on the CD4019BCN IC and how it works...
+
+Only the STATUS and CONTROL registers of the SPP are used, the DATA register
+is ignored. The STATUS register is used to grab the 8 bit data in two NIBBLEs
+and the CONTROL register is used to control the ADC0804LCN and the CD4019BCN
+to do this task. The assembly code at the end of this manual describes the
+process further, so read that section for more information.
+
+-----------------------------------------------------------------------------
+
+                             The Project Proper.
+                             -------------------
+
+The parts list below is a separate file, ~PARTS.LST~, also to save loading
+this text file to get the parts required.
+
+It is for the more experienced amongst us who can build such a project
+without refering to this ~MANUAL.TXT~ every time.
+
+  Parts List For The PC Type A-D Converter:-
+  ------------------------------------------
+
+  1) R1.....................  10 KilOhms, 1/8 Watt Resistor.
+  2) R2.....................  1 KilOhm, 1/8 Watt Resistor.
+  3) R3.....................  680 Ohms, 1/8 Watt Resistor.
+  4) R4.....................  10 KilOhms, 1/8 Watt Resistor.
+
+  5) C1.....................  100pF Capacitor, 35 Volts or greater working.
+
+  6) ZD1....................  7.5 Volt Zener Diode.
+  7) ZD2....................  2.4 Volt Zener Diode.
+
+  8) RV1....................  4.7 KilOhms Preset Variable Resistor.
+
+  9) IC1....................  ADC0804LCN A-D Converter IC.
+ 10) IC2....................  CD4019BCN CMOS IC.
+ 11) SK1....................  Line Input Socket, PHONO/RCA type.
+ 12) 25 Pin ~D~ Type Male Plug.
+ 13) Matching ~D~ Type Shell for the plug.
+ 14) IC Holder for ADC0804LCN ADC IC.
+ 15) IC Holder for CD4019BCN CMOS IC.
+ 16) Various Coloured Stranded Wire.
+ 17) Stripboard/Veroboard. See the ~MANUAL.TXT~ for cutting dimensions.
+ 18) Tinned Copper Wire, as required.
+ 19) Small Cable Ties.
+ 20) Heat Shrink Sleeving, this is NOT important.
+ 21) Thin Mono` Audio Coaxial Cable.
+ 22) Stick On Cable Clips, as required.
+ 23) Sundries, eg Screws, Nuts, Etc... Etc...
+ 24) NEW, Duracel AA 1.5 Volt Alkiline Battery for calibration.
+
+  Notes:-
+  -------
+
+  1) All component tolerances are + or - 10% or better.
+  2) All components can be sourced from any supplier.
+  3) Items 19), 20), 22) and 23) are optional.
+  4) Item 24) MUST be NEW as a reference starting point for calibration.
+
+-----------------------------------------------------------------------------
+
+  Tools Required:-
+  ----------------
+
+  1) Soldering iron, (be vary careful with this).
+  2) Solder.
+  3) Small side cutters.
+  4) Small pair of pliers.
+  5) A flat file.
+  6) A Stanley knife, or similar, (be very, very careful with this),
+  7) A small drill bit, 4mm diameter.
+  8) A small flathead screwdriver.
+  9) A small crosshead screwdriver.
+ 10) A hair drier, this is NOT important.
+
+-----------------------------------------------------------------------------
+
+  Some Basic Construction Information:-
+  -------------------------------------
+
+(This may seem a little childish, but remember, it IS aimed at 10 year olds.)
+
+Refer to the ~BRDLOWER.JPG~, ~BRDUPPER.JPG~ and ~ADC-PC.BMP~ photo`s and
+drawings for more information. Although not perfect you should be able to
+work out the/your positions from these images.
+
+HANDLE ALL TOOLS, CHEMICALS, SOLVENTS AND MAINS POWERED GEAR WITH CARE!!!
+
+Remember to ~tin~ the ends of the wires, components, etc using the soldering
+iron and solder before fitting!
+
+  THIS BIT IS IMPORTANT!!!
+  ------------------------
+
+BE WELL AWARE, that when counting the strip and hole positions for fitting
+the items to the board that you count from the CORRECT EDGE(S) when viewing
+the board images from the UPPER side to the LOWER side.
+
+  The Construction Proper:-
+  -------------------------
+
+  1) Set up a prepared area to work; this might sound obvious but the number
+     of people I see soldering and drilling, etc, in dangerous positions and
+     places risking their lives and/or limbs is staggering - SO BEWARE!
+  2) Using the Stanley knife cut a piece of stripborad to 36 strips by 26
+     holes. Once cut use the file to trim the cut edge, (and radius the
+     corners if required).
+  3) Using the drill bit remove the copper from the strips as viewed in the
+     ~BRDLOWER.JPG~ image. Do not go right through the board. This is easily
+     done using your fingers; therefore a drilling tool is NOT required.
+  4) From now on refer to the ~BRDLOWER.JPG~, ~BRDUPPER.JPG~ and
+     ~ADC-PC.BMP~ images.
+  5) Using a soldering iron, solder, (and side cutters), fit the two IC
+     holders and solder into their correct places with reference to the
+     images above.
+  6) Fit and solder the copper wire links and cut off any excess copper
+     wire.
+  7) Fit and solder the four resistors, one capacitor and one variable
+     resistor into place and cut off any excess wire.
+  8) Fit the two zener diodes, carefully solder into place and cut off any
+     excess wire. NOTE:- Make sure the polarity of these zener diodes is
+     correct and in their correct places.
+  9) Using coloured wire of your choice strip the ends, tin, fit and solder
+     differing colours to the board and cut off any excess copper strands,
+     then strip, tin and solder the other ends of the correct wires to the
+     correct pins of the 25 way ~D~ type plug; from experience it is best
+     to complete EACH wire fitting at both ends when you are a beginner.
+     Do NOT fit the ~D~ type shell yet!
+ 10) Using a short length of mono` audio coaxial cable, strip the sleeving
+     off one end. Separate the braid from the inner conductor and clean up.
+     (Optionally place a short length of small diameter heat shrink sleeving
+     over the whole cable diameter.)
+ 11) Refit the cut off sleeving over the coaxial cable braid leaving enough
+     braid to be tinned and fitted to the board.
+     (Optionally place the heat shrink sleeving over the ~Y~ joint and using
+     the hair drier shrink this sleeving into place.)
+ 12) Fit and solder this prepared end of the coaxial cable to the correct
+     places on the board and cut off any excess wire.
+ 13) Disassemble a PHONO socket and place the barrel over the cable.
+ 14) Strip the sleeving off of the opposite end to the one that has already
+     been fitted and separate the braiding from the inner conductor.
+ 15) Trim, tin and solder the inner conductor to the inner pin of the PHONO
+     socket and tin and solder the braiding to the outer section, GND, of
+     the socket. Do NOT fit the barrel of the PHONO socket back to the socket
+     as yet.
+ 16) Fit the two ICs to their respective sockets with care. Be aware of
+     damage due to electrostatic effects and ensure they are the correct way
+     round in their sockets.
+ 17) Optionally use cable ties and stick on cable clips to finish off.
+ 18) Thoroughly check all of your construction work from part 3) onwards.
+ 19) Check it again.
+ 20) Check it a third time, REMEMBER!, any error could cause serious damage
+     to the computer so be well aware of this.
+ 21) If all is well then go to part 22), otherwise correct any error that
+     you have found and go back to part 18).
+ 22) Now finally fit the barrel of the PHONO socket to the socket itself and
+     fit the ~D~ type shell to the 25 way ~D~ type plug.
+ 23) Now carry on with the Added Circuit below...
+
+=============================================================================
+
+               Added Circuit To The ADC Stripboard Assembly.
+               ---------------------------------------------
+
+A 9 Volt DC to 5 Volt DC regulated dropper circuit for the MikeOS project.
+It is added to the board to give an independant supply to the board as PCs
+do not have a 5 Volt continuous output to run the ADC reliably.
+
+                         IC1
+                       +-----+
+   +9V O--------*------*     *------*--------O +5V Regulated.
+             +  |      |     |   +  |
+               === C1  +--*--+     === C2
+                |         |         |
+   GND O--------*---------*---------*----*---O GND
+                                       __|__
+                                       /////
+
+-----------------------------------------------------------------------------
+
+  Extra Parts List:-
+  ------------------
+
+  1) IC1 .......................  NEC 78L05, regulator.
+  2) C1 ........................  47uF, 16V electrolytic.
+  3) C2 ........................  10uF, 16V electrolytic.
+  4) PP3 Battery Connector......  Any type.
+  5) PP3 Battery ...............  Any type.
+  6) Tinned Copper Wire ........  As required.
+  7) Various Coloured Wire .....  As required.
+  8) Small Cable Ties ..........  As required.
+  9) Stick On Cable Clips ......  As required.
+
+  Notes:-
+  -------
+
+  1) All component tolerances are + or - 10% or better.
+  2) All components can be sourced from any supplier.
+  3) Items 7), 8) and 9) are optional.
+
+-----------------------------------------------------------------------------
+
+  Tools Required:-
+  ----------------
+
+  1) Soldering iron, (be very careful with this).
+  2) Solder.
+  3) Side cutters.
+
+-----------------------------------------------------------------------------
+
+  Construction Of The Added Components:-
+  --------------------------------------
+
+Refer to the ~BRDLOWER.JPG~, ~BRDUPPER.JPG~ and ~ADC-PC.BMP~ photo`s and
+drawings for more information. Although not perfect you should be able to
+work out the positions from these images.
+
+Refer also to the earlier safety, etc conditions on building this project
+before continuing.
+
+  1) Fit the capacitors C1 and C2 and solder into place. NOTE:- Make sure
+     the polarity of these capacitors is correct!!!
+  2) Fit the tinned copper wire links as required and solder into place.
+  3) Fit the PP3 battery terminal assembly to the correct positions and
+     solder into place.
+  4) Finally fit the regulator IC and solder into place. NOTE:- Make sure
+     that this IC is fitted the correct way round!!!
+
+The construction of the whole assembly is now finalised and ready for initial
+checking and testing. A ~Test Lead~ WILL be needed and is described below...
+
+=============================================================================
+
+                       Construction Of The Test Lead.
+                       ------------------------------
+
+  Parts Required:-
+  ----------------
+
+  1) A length of coaxial cable approximately 1.5 metres, RG58 or UR76.
+  2) A PHONO or RCA plug.
+  3) A countersunk head brass screw approximately 1.5" (37mm) long.
+  4) A matching nut.
+  5) An insulated crocodile clip.
+  6) A length of sleeving, (the sleeving off of the coaxial cable will do).
+  7) An old ballpoint pen case cut down to about 3" to 4" long, see text.
+
+----------------------------------------------------------------------------
+
+  Tools Required:-
+  ----------------
+
+  1) Soldering iron.
+  2) Solder.
+  3) Side cutters.
+  4) Small pliers.
+  5) A flat file.
+  6) A hobby saw.
+  7) PVC tape.
+  8) Superglue, (be very careful with this).
+
+----------------------------------------------------------------------------
+
+  Refer to the drawings ~PROBE.GIF~ and ~PROBE.JPG~ for further information.
+
+Strip at least 6" to 9" of sleeving off of one end of the coaxial cable.
+Do NOT discard this sleeving. Separate the braid from the inner conductor.
+Solder the inner conductor to the head of the brass countersunk-head screw.
+  
+Place the sleeving over the braiding before fitting the crocodile clip and
+then wrap some PVC tape around the ~Y~ joint of the cable. Solder the
+crocodile clip to the braiding. Dismantle an old ballpoint pen to obtain the
+case. Discard all of the inner parts of the pen.
+
+Before reassembling the screw into the ballpoint pen case, cut the case down
+to a practical length, (approximately 3" to 4"). Fit the PHONO, (RCA), plug
+to the other end of the coaxial cable, inner conductor to the pin, the braid
+to the outer part of the plug. The head of the screw may need to be filed
+narrower to fit inside the ballpoint pen case.
+
+When you have checked this cable and are confident it is electrically good
+use the superglue to seal the top of the pen case and the nut. Do NOT get
+this glue on you or anything else as it is dangerous. Allow time to dry.
+
+NOTE:- The photograph shows a BNC plug fitted with a BNC-PHONO adapter
+connected. If you feel confident in doing it this way then do so.
+
+=============================================================================
+
+  Testing And Calibration:-
+  -------------------------
+
+Ensure that a copy of ~CALIBRAT.BAS~, ~PARAPORT.BAS~ and ~PARAPORT.DAT~ is
+on a copy of a MikeOS floppy disk. I chose this mode for ease of access.
+
+This project only works on machines with a parallel port in SPP, (Standard
+Parallel Port), mode.
+
+You WILL need the Duracel 1.5 Volt cell for this test proceedure...
+
+  1) Thoroughly check all of your construction work.
+  2) Check it again.
+  3) Check it a third time, REMEMBER!, any error could cause serious damage
+     to the computer so be well aware of this.
+  4) If all is well then go to part 5), otherwise correct any error that you
+     have found and go back to part 1).
+  5) Ensure the computer is powered down, (OFF).
+  6) Set the preset variable resistor, RV1, on the board, to the fully
+     anticlockwise position.
+  7) Connect the Test Lead to the PHONO, (RCA), input socket.
+  8) Connect a PP3 battery to the battery connector.
+  9) Connect the 25 way ~D~ type plug into the parallel port.
+ 10) I now assume that a floppy disk and drive are available for simplicity,
+     see above.
+ 11) Boot into MikeOS 4.0x or above and run ths OS as normal.
+ 12) Start the editor and then load in ~CALIBRAT.BAS~.
+ 13) Press F8 to run the program.
+ 14) With nothing connected to the input the value(s) 0, (to 2), should be
+     displayed. IF NOT then power down the computer, disconnect the board
+     from the parallel port, disconnect the battery and then go back to 1).
+ 15) IF ALL IS OK, connect the 1.5 Volt Duracel battery, +ve to the PROBE
+     tip and -ve to the crocodile clip.
+ 16) The reading should now be somewhere between 40 and 100. It does not
+     matter if the reading is slightly out of that range.
+ 17) Remove the Duracel 1.5 Volt battery and connect the probe tip to the
+     +ve 5 Volt supply line.
+ 18) The reading should now be somewhere between 100 and 255.
+ 19) Replace the probe tip to the +ve 9 Volt supply input of the PP3 battery.
+ 20) The reading should now be fixed at 255.
+ 21) IF ALL is well then, WELL DONE!!!
+     Your project is now ready for calibration at part 22)......
+ 22) Now re-connect the 1.5 Volt Duracel battery, +ve to the PROBE tip and
+     -ve to the crocodile clip.
+ 23) Adjust the preset variable resistor, RV1, to give a value of 80 + or -
+     1 on the calibration software.
+ 24) WELL DONE! Your Analogue To Digital Converter, ADC, is now ready for
+     proper use in future projects. I hope to start a Data Loger/Transient
+     Recorder as soon as possible.
+ 25) Power down the computer and dsiconnect the ADC board and the boards
+     peripheral bits and pieces.
+
+The next project will probably be an AF Power Meter, 0 to 100 Watts RMS.
+Look out for it in the near future...
+
+=============================================================================
+
+The Analogue To Digital Converter is now complete as a project in itself and
+all that is required is to build the extras along with any BASIC code to run
+them.
+
+Now take this hardware that you have built and think of uses it can be used
+for. As it stands, with simple home built add-on hardware and simple BASIC
+code, there are many!!!
+
+=============================================================================
+
+  Notes On The Code:-
+  -------------------
+
+All the code in this archive is Public Domain, (PD). You can do with it as
+you wish except respect the (C) for the idea by myself. There are three code
+segments:-
+
+  1) CALIBRAT.BAS ......  This is the calbration software to set up the ADC
+                          when it is finished.
+  2) PARAPORT.BAS ......  This is the running software and demonstrates a
+                          simple analogue bar graph using standard CGA Text
+                          Mode 3.
+  3) PARAPORT.ASM ......  This is the assembly code and is MikeOS compliant.
+                          It was compiled using the A86/D86 combination for
+                          MS-DOS and when compiled it was renamed......
+  4) PARAPORT.DAT ......  This is the machine language subroutine to access
+                          the parallel port in SPP, (Standard Parallel Port),
+                          mode. (It works on my Quad Core 2.4GHz tool fine.)
+
+BEWARE!!! The assembler code assumes the most common I/O, (Inout/Ouput),
+addresses for the parallel port. There are others, so check that yours are
+correct before running this code at all. The parallel port addresses used in
+this project are, (DATA - unused at 0x378h), STATUS at 0x379h and CONTROL at
+0x37Ah. IF yours are different then change the assembly code to suit and
+re-compile. There should be no change to the BASIC code however.
+
+All the remarks inside the code should be enough to describe what is going on
+when the program is run.
+
+When running the PARAPORT.BAS code, ONLY the 0 - 5 Volt range is usable at
+this point, so ignore the other two ranges as these are for future use...
+
+-----------------------------------------------------------------------------
+
+  BASIC Calibration Code, CALIBRAT.BAS:-
+  --------------------------------------
+
+REM ADC calibration for MikeOS issued as PD, 08-01-2010.
+REM Original copyright (C)2010, B.Walker, G0LCU.
+
+REM Load in the machine code hardware routine.
+LOAD "PARAPORT.DAT" 65000
+
+REM Master variable(s) here...
+REM a = 0 to 255 from the ADC output.
+REM k = ASCII 27, ~Esc~ to quit the progam.
+a = 255
+k = 27
+
+REM Poke the hardware access binary from here.
+REM DO NOT TOUCH THESE FOR THE EXISTING HW!!!
+POKE 57 65059
+POKE 254 65060
+
+mainloop:
+REM Clear the screen area...
+CLS
+
+REM Show (C), etc, and generate a simple screen...
+PRINT ""
+PRINT "ADC Project for MikeOS, (C)2010, B.Walker, G0LCU."
+PRINT ""
+PRINT "Calibrating the ADC, see ~MANUAL.TXT~ for more info`."
+PRINT ""
+
+REM Call the subroutine to access the parallel port...
+CALL 65000
+
+REM Get the byte stored from the parallel port...
+PEEK a 65081
+
+REM print the value to the screen.
+PRINT "Value read from the parallel port is:- " ;
+PRINT a ;
+PRINT "..."
+
+REM Remind us how to Quit the program.
+PRINT ""
+PRINT "Press <Esc> to Quit:- " ;
+
+REM Slow it down a bit deliberately...
+PAUSE 5
+
+REM We need to get out of the loop, use <Esc> to do so.
+GETKEY k
+IF k = 27 THEN GOTO cleanexit
+GOTO mainloop
+
+REM Exit the program cleanly...
+cleanexit:
+CLS
+END
+
+-----------------------------------------------------------------------------
+
+  BASIC Running Code, PARAPORT.BAS:-
+  ----------------------------------
+
+REM Analogue voltmeter for MikeOS issued as PD, 25-11-2009.
+REM Original copyright (C)2009, B.Walker, G0LCU.
+
+REM Load in the machine code hardware routine.
+LOAD "PARAPORT.DAT" 65000
+
+REM Master variables here...
+REM a = analogue value to plot.
+REM b = ADC byte grabbed from the port.
+REM k = ASCII key code set to the <Esc> key.
+REM n = can be anything and is a counter here.
+b = 255
+a = b / 5
+k = 27
+n = 0
+
+REM Poke the hardware access binary from here.
+REM DO NOT TOUCH THESE FOR THE EXISTING HW!!!
+POKE 57 65059
+POKE 254 65060
+
+REM Clear the screen area...
+CLS
+
+REM This sets up the initial screen.
+PRINT ""
+PRINT "          Simple analogue voltmeter for MikeOS using the parallel port."
+PRINT "          (C)2009, B.Walker, G0LCU. Now issued as PD for use on MikeOS."
+PRINT ""
+PRINT "              0   2.0  4.0  6.0  8.0 10.0 12.0 14.0 16.0 18.0 20.0"
+PRINT "    Scale.    0   1.0  2.0  3.0  4.0  5.0  6.0  7.0  8.0  9.0 10.0"
+PRINT "              0   0.5  1.0  1.5  2.0  2.5  3.0  3.5  4.0  4.5  5.0"
+PRINT "              ++++++++++++++++++++++++++++++++++++++++++++++++++++"
+PRINT "             <|                                                   >"
+PRINT "              +----+----+----+----+----+----+----+----+----+----+-"
+
+REM This is the mainloop...
+mainloop:
+REM Call the subroutine to access the parallel port...
+CALL 65000
+
+REM Get the byte stored from the parallel port...
+PEEK b 65081
+a = b / 5 
+
+REM Slow it down to about 1 sample per second...
+PAUSE 5
+
+REM Re-adjust the print position for the animation...
+MOVE 14 8
+PRINT "|                                                   "
+
+REM This creates the simple linear meter animation...
+MOVE 14 8
+n = 0
+readoutloop:
+PRINT "|" ;
+n = n + 1
+IF n > a THEN GOTO readoutloopout
+GOTO readoutloop
+
+REM Once the analogue display has been updated finish off the display.
+REM This deliberately slows down the system and places the cursor
+REM in the correct position after a full ADC grab.
+readoutloopout:
+MOVE 28 11
+PRINT "Press <Esc> to Quit:- " ;
+
+REM We need to get out of the loop, use <Esc> to do so.
+GETKEY k
+IF k = 27 THEN GOTO cleanexit
+GOTO mainloop
+
+REM Exit the program cleanly...
+cleanexit:
+CLS
+PRINT ""
+PRINT "Program terminated..."
+END
+
+-----------------------------------------------------------------------------
+
+  Assembly Code, PARAPORT.ASM:-
+  -----------------------------
+
+;
+;            PARALLEL PORT ACCESS FOR ~IBM~ PC TYPE COMPUTERS.
+;            -------------------------------------------------
+;
+;      (C)1998  B.Walker, (G0LCU). Email to:-  wisecracker@tesco.net
+;      -------------------------------------------------------------
+;
+;----------------------------------------------------------------------------
+;
+; This is a subroutine only and the MS-DOS (TM) ~DEBUG~ command is used to
+; check that it works properly.
+;
+; It was compiled using the A86/D86 (C) combination and is only 82 Bytes
+; long. See ~(C)-AD86.TXT~ for further information.
+;
+;----------------------------------------------------------------------------
+;
+; NOTE:- This source code is FREE and can be used by anyone who needs it.
+; This is issued under PD 2009, for the MikeOS 16 bit operating system.
+;
+;----------------------------------------------------------------------------
+;
+; Enter the subroutine here.
+; subroutinestart:
+        pushf                           ;Push used registers.
+        push    dx                      ;Note that the flags are ignored.
+        push    cx                      ;
+        push    ax                      ;
+        mov     dx,037ah                ;Point to parallel port control bits.
+        mov     ax,00ah                 ;Set -STROBE high & clear other bits.
+        out     dx,al                   ;Do it.
+        mov     al,00bh                 ;Now trigger the -STROBE bit.
+        out     dx,al                   ;Do it.
+        mov     al,8                    ;Set my board to 4 highest bits.
+        out     dx,al                   ;Do it.
+        call    timedelay               ;Hold the port pins for a while.
+        mov     dx,0379h                ;Point to port status bits.
+        in      al,dx                   ;Read 4 bit data, high nibble.
+        shl     al,1                    ;Shift into top 4 bits.
+        and     al,0f0h                 ;Ensure 4 high bits only.
+        mov     ah,al                   ;Store data into ah register.
+        mov     dx,037ah                ;Point to port control bits again.
+        mov     al,00ah                 ;Keep -STROBE high & clear other bits.
+        out     dx,al                   ;Do it.
+        mov     al,2                    ;Now set my board to 4 lowest bits.
+        out     dx,al                   ;Do it.
+        call    timedelay               ;Hold these port pins for a while.
+        mov     dx,0379h                ;Point to port status bits.
+        in      al,dx                   ;Read 4 bit data, low nibble.
+        shr     al,1                    ;Shift to the right 3 times.
+        shr     al,1                    ;
+        shr     al,1                    ;
+        and     al,00fh                 ;Ensure low 4 bits only.
+        add     al,ah                   ;Add high nibble to low nibble.
+        xor     ah,ah                   ;Clear ah register.
+        mov     store,al                ;We now have the byte we want.
+        mov     dx,037ah                ;Point to control bits again.
+        mov     al,00ah                 ;Keep -STROBE high & clear other bits.
+        out     dx,al                   ;Do it.
+        pop     ax                      ;Pop the registers back.
+        pop     cx                      ;
+        pop     dx                      ;
+        popf                            ;
+        ret                             ;Retrun back to main calling routine.
+timedelay:
+        mov     cx,0ffffh               ;Load the cx register as a counter.
+timerhold:
+        sub     cx,1                    ;Count down by 1
+        jnz     timerhold               ;Subtract 1 from counter until finshed.
+        ret                             ;Return to calling routine.
+store   db      0c3h                    ;My A-D Converter byte saved.
+
+Below is a HEX dump of the above code and could have been used to POKE the
+values into memory to make the whole BASIC code ENTIRELY BASIC but I decided
+to use the ~PARAPORT.DAT~ file instead for ease of typing into the BASIC code.
+
+  PARAPORT.DAT HEX Dump, PARAPORT.HEX:-
+  -------------------------------------
+
+0000: 9C525150 BA7A03B8 0A00EEB0 0BEEB008    .RQPºz.¸..î°.î°.
+0010: EEE83400 BA7903EC D0E024F0 88C4BA7A    îè4.ºy.ìÐà$ð.Äºz
+0020: 03B00AEE B002EEE8 1E00BA79 03ECD0E8    .°.î°.îè..ºy.ìÐè
+0030: D0E8D0E8 240F02C4 32E4A251 01BA7A03    ÐèÐè$..Ä2ä¢Q.ºz.
+0040: B00AEE58 595A9DC3 B9FFFF83 E90175FB    °.îXYZ.Ã¹...é.uû
+0050: C3C3                                   ÃÃ
+
+-----------------------------------------------------------------------------
+
+Well folks, that`s all there is to it. I hope you enjoyed building your first
+project for MikeOS 4.0x and above. This project has also been applied to
+MS-DOS and if you want details then EMail me at my EMail address at the end
+of this ~MANUAL.TXT~...
+
+Bye...
+
+=============================================================================
+
+                                IMPORTANT:-
+                                -----------
+
+    The Legal Stuff:-
+    -----------------
+
+    These programs are Freeware and no profit will be made from them,
+    also all of the files must remain unaltered and intact including this
+    one. The author is not responsible for any damage to, or loss of, or
+    failure of equipment or data caused in any way by the use of these
+    programs. There is NO warranty with the use of these software releases
+    and YOU USE THEM AT YOUR OWN RISK.
+
+----------------------------------------------------------------------------
+
+                                 WARNING.
+                                 --------
+
+  1) DISCONNECT any faulty equipment under test from the MAINS supply.
+  2) If a DC supply is used do NOT reverse polarity the connections.
+  3) Do NOT power up any electronic item until it is safe to do so.
+  4) CHECK and RECHECK all of your construction and repair work thoroughly.
+  5) Handle ALL tools used with care.
+  6) Beware of ALL types of solvents, glues and etching fluids.
+  7) NEVER leave a soldering iron switched on unattended.
+  8) KEEP everything OUT of the reach of small children.
+  9) Switch OFF the computer before disconnecting or connecting any hardware.
+ 10) And finally read 1) to 9) again.
+
+----------------------------------------------------------------------------
+
+   Contact:-
+   ---------
+
+   Mr Barry Walker, G0LCU,
+   70 King George Road,
+   Loughborough,
+   Leicestershire,
+   LE11 2PA,
+   England.
+
+   Email:-     wisecracker@tesco.net
+   URL:-       http://homepages.tesco.net/wisecracker/G0LCU.HTM
+
+   (Author of the ~TestGear?~ projects in the ~docs/hard~ drawer of AMINET.)
+
+               http://aminet.net/search?readme=wisecracker
+
+=============================================================================

@@ -1,0 +1,126 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="os_mm.asm">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class="select"><a href="files.html">Files</a></li>
+<li class=""><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both">
+<table>
+<tr><td>
+		<h2 class="header">os_mm.asm</h2>
+</td></tr>
+<tr><td>
+<p class="description">File contains subroutines responsible for memory managment. Memory uses by memory manager starts at 2000:E000. Maximum block allocated is 8190 bytes. Size of blocks allocated by os_mm_alloc are aligned to power of 2.</p>
+</td></tr>
+</table>
+<table class="section_table">
+<tr><td celspan="2"><h3>Function list</h3></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mm_init">os_mm_init</a></p></td><td>Init memory manager.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mm_release">os_mm_release</a></p></td><td>Resets memory manager.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mm_alloc">os_mm_alloc</a></p></td><td>Allocate memory block.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mm_realloc">os_mm_realloc</a></p></td><td>Reallocate memory block allocated by os_mm_alloc.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mm_free">os_mm_free</a></p></td><td>Free allocated memory.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mm_get_size">os_mm_get_size</a></p></td><td>Get size of alloced memory block.Returned value might vary...</td></tr>
+</table>
+		<h3>Descriptions</h3>
+		<h4 id="os_mm_init" class="title">os_mm_init</h4>
+		<p class="description">Init memory manager.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">Called by system. No need to call by user</div>
+		</div>
+		<div class="section">Section : memory</div>
+		<h4 id="os_mm_release" class="title">os_mm_release</h4>
+		<p class="description">Resets memory manager.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">Called by system. No need to call by user</div>
+		</div>
+		<div class="section">Section : memory</div>
+		<h4 id="os_mm_alloc" class="title">os_mm_alloc</h4>
+		<p class="description">Allocate memory block.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - number of bytes to alloc</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">ES:DI - address of allocated memory</div>
+			<div class="param">AX - 1 ok , 0 not ok</div>
+		</div>
+		<div class="section">Section : memory</div>
+		<h4 id="os_mm_realloc" class="title">os_mm_realloc</h4>
+		<p class="description">Reallocate memory block allocated by os_mm_alloc.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - memory to realloc</div>
+			<div class="param">DX - new size in bytes</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">ES:DI - pointer to memory block</div>
+			<div class="param">AX - 1 ok, 0 fails</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">Memory addres returned might me different than </div>
+<div class="param"> memory addres send to the subroutine.</div>
+<div class="param"> If reallocation fails ES:DI contains ES:DI send</div>
+<div class="param"> to the procedure</div>
+		</div>
+		<div class="section">Section : memory</div>
+		<h4 id="os_mm_free" class="title">os_mm_free</h4>
+		<p class="description">Free allocated memory.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI memory block allocated by os_mm_alloc or os_mm_realloc</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : memory</div>
+		<h4 id="os_mm_get_size" class="title">os_mm_get_size</h4>
+		<p class="description">Get size of alloced memory block.Returned value might vary from a size value sent to os_mm_alloc. (grater or equal than sent to os_mm_alloc).</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - poineter to the block</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - size of the block</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">returned value is an align to the nearest power of 2</div>
+		</div>
+		<div class="section">Section : memory</div>
+</div>
+	</body>
+</html>

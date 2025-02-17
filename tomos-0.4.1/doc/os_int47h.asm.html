@@ -1,0 +1,96 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="os_int47h.asm">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class="select"><a href="files.html">Files</a></li>
+<li class=""><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both">
+<table>
+<tr><td>
+		<h2 class="header">os_int47h.asm</h2>
+</td></tr>
+<tr><td>
+<p class="description">File contains subroutines responisble for systemcalls.</p>
+</td></tr>
+</table>
+<table class="section_table">
+<tr><td celspan="2"><h3>Function list</h3></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_int47h_setup">os_int47h_setup</a></p></td><td>Set TomOS system calls on int 47h. Cant be called by...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_int47h">os_int47h</a></p></td><td>Int47 handler.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_int47h_get_syscall">os_int47h_get_syscall</a></p></td><td>Get addres of syscall.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_int47h_set_syscall">os_int47h_set_syscall</a></p></td><td>Set addres of syscall.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_int47h_get_syscall_id">os_int47h_get_syscall_id</a></p></td><td>Get id of syscall by address.</td></tr>
+</table>
+		<h3>Descriptions</h3>
+		<h4 id="os_int47h_setup" class="title">os_int47h_setup</h4>
+		<p class="description">Set TomOS system calls on int 47h. Cant be called by user.It is called by system during startup. </p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing </div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : tomos syscalls</div>
+		<p class="see"> see: os_main.asm</p>
+		<h4 id="os_int47h" class="title">os_int47h</h4>
+		<p class="description">int47 handler.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX - id of syscall</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">if ax out of bound return 0FFFFh</div>
+		</div>
+		<div class="section">Section : tomos syscalls</div>
+		<h4 id="os_int47h_get_syscall" class="title">os_int47h_get_syscall</h4>
+		<p class="description">Get addres of syscall.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX - id of syscall</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">DX:DI - syscall address</div>
+			<div class="param">if ax out of bound return 0FFFFh</div>
+		</div>
+		<div class="section">Section : tomos syscalls</div>
+		<h4 id="os_int47h_set_syscall" class="title">os_int47h_set_syscall</h4>
+		<p class="description">Set addres of syscall.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX - id of syscall</div>
+			<div class="param">DX:DI - syscall address</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 0FF if id out of bound</div>
+			<div class="param">if ax out of bound return 0FFFFh</div>
+		</div>
+		<div class="section">Section : tomos syscalls</div>
+		<h4 id="os_int47h_get_syscall_id" class="title">os_int47h_get_syscall_id</h4>
+		<p class="description">Get id of syscall by address.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX:DI - syscall address</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - id syscall if found or 0FFFFh</div>
+		</div>
+		<div class="section">Section : tomos syscalls</div>
+</div>
+	</body>
+</html>

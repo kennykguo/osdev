@@ -1,0 +1,2 @@
+LICENCJA: BSD
+ShockOS jest systemem operacyjnym. Jest on cały pisany w asemblerze. Bazuje on na MikeOS(http://mikeos.berlios.de/).

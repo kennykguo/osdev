@@ -1,0 +1,562 @@
+
+               Guidelines for using a USB Keyboard as USB I/O.
+               -----------------------------------------------
+
+  Overview:-
+  ----------
+
+  USB Keyboard Input/Output for machines that do not have Serial and/or
+  Parallel Ports. It gives 2, (out of a possible 4), bits real time INPUT
+  and 2, (out of a possible 3), bits toggled OUTPUT. It uses the BIOS
+  Keyboard Flags address that can be read/written easily by SW using
+  MikeBASIC.
+
+  The finished item gives a slow USB port for MikeOS usage. It goes without
+  saying then that a USB to PS/2 adaptor will give a PS/2 keyboard similar
+  properties. Have fun...
+
+-----------------------------------------------------------------------------
+
+  Ramblings:-
+  -----------
+
+  I apologise for any typos and/or grammar errors as I haven't done any
+  checking in that department. I have made every endeavour to keep this text
+  as accurate as is possible however; so read the IMPORTANT and WARNING
+  sections towards the end of this MANUAL.TXT.
+
+  Before we start there are NO circuits as such as the KB I used was a
+  random choice from a UK supplier, CPC, and was seriously CHEAP! So this
+  MANUAL.TXT is a guideline as to how I did it, using photographs to see
+  the method to be described. As all keyboards are different then the
+  extremely simple circuits would be different too, however the principle
+  remains the same.
+
+  The keyboard I used was a BTC 5145C, however this is no longer available
+  from CPC, see KEYBOARD.JPG.
+
+  I took great care to keep this keyboard fully working so that it was not
+  only USB I/O but my external coding keyboard for my netbook and notebook
+  also... :-O
+
+  For this to work the BIOS MUST be set to accept LEGACY USB KB mode. This
+  is usually FIXED on Laptops, Notebooks and Netbooks, and is optional on
+  current Desktops and/or Desktops without Parallel and/or Serial Ports.
+
+-----------------------------------------------------------------------------
+
+  Tools Rquired:-
+  ---------------
+
+  1) Soldering iron, (be vary careful with this).
+  2) Solder.
+  3) Small side cutters.
+  4) Small pair of pliers.
+  5) A flat file.
+  6) A Stanley knife, or similar, (be very, very careful with this).
+  7) A small drill bit, 4mm diameter.
+  8) A small flathead screwdriver.
+  9) A small crosshead screwdriver.
+ 10) A hair drier, this is NOT important.
+ 11) A battery driven power drill.
+ 12) A stepped drill bit to at least 24mm daimeter.
+ 13) A basic Multimeter.
+
+-----------------------------------------------------------------------------
+
+  My Home Built Boards Parts List:-
+  ---------------------------------
+
+  A) The Toggled Output Section:-
+  -------------------------------
+
+  1) Transistor, 2 off .................  BC557B or similar.
+  2) Resistors, 2 off ..................  10 KilOhm + or - 10%, 1/8W.
+  3) Resistors, 2 off ..................  4.7 KilOhm + or - 10%, 1/8W.
+  4) Red, White, Blue and Black Wire ...  Coloured wire.
+  5) Tinned Copper Wire ................  As required.
+  6) Terminal block ....................  Three way, see photo.
+  7) Cable Clip ........................  Sticky type, see photo.
+  8) Veroboard/Stripboard ..............  See photo for strips and holes.
+  9) Small Tie-wraps ...................  These are optional.
+ 10) Jack Plug .........................  4 pole 3.2mm type.
+
+  B) The Real Time, (RT), Input Section:-
+  ---------------------------------------
+
+  1) Zener Diode .......................  4.7V at least 150m/A rating.
+  2) Resistor ..........................  150 Ohm, + or - 10%, 1/2W.
+  3) Reed Relay Assembly, 2 off ........  MEDER SIL05-1A72-71D or similar.
+  4) Resistor, 2 off, OPTIONAL .........  150 Ohm, + or - 10%, 1/8W.
+  5) Battery Clip ......................  PP3 type.
+  6) Battery ...........................  Any PP3 type.
+  7) Green, Yellow and Blue Wire .......  Coloured wire.
+  8) Tinned Copper Wire ................  As required.
+  9) Terminal Block ....................  Three way, see photo.
+ 10) Veroboard/Stripboard ..............  See photo for strips and holes.
+ 11) Small Tie-wraps ...................  These are optional.
+ 12) Cable Clip ........................  Sticky type, see photo.
+ 13) Jack Plug .........................  3 pole 2.5mm type.
+
+  C) The Keyboard Extras:-
+  ------------------------
+
+  1) Wire ..............................  Colours the same as above.
+  2) Jack Socket .......................  4 pole 3.2mm type.
+  3) Jack Socket .......................  3 pole 2.5mm type.
+  4) Heat Shrink Sleeving ..............  Various sizes.
+  5) Small Tie-wraps ...................  These are optional.
+  6) Cable Clips .......................  Sticky type, see photo(s).
+
+-----------------------------------------------------------------------------
+
+  Modifying MY BTC 5145C Keybaord:-
+  ---------------------------------
+
+  (Just to let you all know I am using this MODIFIED USB keyboard to type
+  this MANUAL.TXT fiie... :)
+
+  This is not a project for the BEGINNER, experience WILL be needed.
+  I am assuming that you still want to use this keyboard, (KB), as a KB.
+
+  Remove the screws from the underside of the keyboard and remove the top.
+
+  Using the stepped drill, drill two holes to suit the sockets as shown in
+  the photographs.
+
+  Fit the sockets to the bottom case section and wire them with the same
+  colours as the external board assemblies. Use heat shrink sleeving to
+  protect the joints and the hair drier to shrink this sleeving down.
+
+  Remove the MPU board and LED board and VERY carefully dismantle the KB
+  membrane as far as possible, DO NOT go any further than the mambrane will
+  allow as permanent damage will result if you do.
+
+  The Real Time, (RT), Input:-
+  ----------------------------
+
+  Use the Multimeter on a LOW Ohms range and trace the lines for the two
+  Caps shift keys. The chances are one line will be COMMON to both as in
+  this case. This will become the COMMON to the two REED relays of the RT
+  INPUT board. Solder the coloured wire from the 3 pole socket to the
+  respective lines on the MPU circuit board as in the photograph.
+  VERY carefully refit this MPU board and mambrane back to their correct
+  positions.
+
+  The Toggled Output:-
+  --------------------
+
+  LEDs have a volts drop across them, when ON, of greater than 1.6V. This
+  can be useful to turn on a Bipolar Transistor to act as a TTL switch... ;o)
+
+  Wire the coloured wires from the 4 pole socket to the LED board as shown
+  in the photograph. Note the Black wire goes all the way round the case to
+  the GND of the MPU board as a COMMON GND for the whole assembly. Use small
+  sticky cable clips to support this wire and tie-wraps as a final support
+  for all the cable assemblies produced. Carefully refit the LED board ready
+  for testing.
+
+  Finally:-
+  ---------
+
+  And finally, (IN MY CASE), drill two large holes in the top cover to allow
+  the cover to fit over the two added sockets.
+
+  THOROUGHLY CHECK AND RECHECK EVERYTHING BEFORE ATTEMPTING ANY TESTS, AS AN
+  ERROR CAN POSSIBLY CAUSE A "CATASTROPHIC" FAILURE OF THE KB AND/OR PC IT
+  IS CONNECTED TO...
+
+  Once thoroughly checked carefully reassemble everything and refit the
+  underside screws.
+
+  If you are happy with your construction then plug the USB KB into a PC
+  with a USB port and check that "all" of the keys are working using a word
+  processor of some kind. HAVE FUN... ;o)
+
+  From the home brew stripboard photographs you will have work out your I/O
+  board designs for yourself as it HAS to be assumed that no two KBs are
+  electronically designed the same.
+
+  Good luck and I will be back with an ADC, (Analogue to Digital Converter),
+  using the RT Input board ONLY.
+
+  Enjoy finding simple solutions to often very diffidult problems... :o)
+
+=============================================================================
+
+  The Code Snippets:-
+  -------------------
+
+  These files are in the archive along with the assembled binaries as *.DAT
+  files except that there is NO MikeBASIC code to access the KEYFLAGS.DAT
+  generated from KEYFLAGS.ASM.
+
+  The CAPSLOCK.ASM, CAPSLOCK.BAS and CAPSLOCK.HEX files:-
+  -------------------------------------------------------
+
+  These are the files to demonstrate how to switch the CAPS LOCK key on and
+  off. The NUMLOCK key can also be toggled at the same time or independantly
+  if so required.
+
+  CAPSLOCK.ASM:-
+  --------------
+
+; CAPSLOCK, (NUMLOCK), ON/OFF sub-routines for MikeOS.
+; Original copyright, (C)2010, B.Walker, G0LCU.
+; For use with MikeBASIC and issued as Public Domain.
+
+; CAPSLOCK.ASM, Version 0.00.10, assembly code.
+
+; Assembled under MS-DOS using the AD86 combination.
+; The binary is 48 bytes in size.
+
+	org 65000		;Setup for MikeBASIC program.
+
+; CAPSLOCKON:
+	pushf			;Store flags and all of the used
+	push	ax		;registers.
+	push	dx		;
+	push	ds		;
+	mov	dx,0040h	;Point to the SEGMENT to access
+	mov	ds,dx		;the REAL time BYTE KB storage.
+	mov	al,[0017h]	;Move the BYTE value from memory
+				;into the AL register.
+	or	al,040h		;SET the required bit, (bit 6),
+				;to a ~1~.
+				;NOTE, change this value for NUMLOCK!
+	mov	[0017h],al	;Replace the modified byte back
+				;into the memory location.
+	int	9		;Now execute the necessary interrupt.
+	pop	ds		;Restore the registers back to
+	pop	dx		;their original values...
+	pop	ax		;
+	popf			;And the flags too.
+	ret			;Return to the calling routine.
+
+; CAPSLOCKOFF:
+	pushf			;Store flags and all of the used
+	push	ax		;registers.
+	push	dx		;
+	push	ds		;
+	mov	dx,0040h	;Point to the SEGMENT to access
+	mov	ds,dx		;the REAL time BYTE KB storage.
+	mov	al,[0017h]	;Move the BYTE value from memory
+				;into the AL register.
+	and	al,0bfh		;RESET the required bit, (bit 6),
+				;to a ~0~, keeping all other bits intact.
+				;NOTE, change this value for NUMLOCK!
+	mov	[0017h],al	;Replace the modified byte back
+				;into the memory location.
+	int	9		;Now execute the necessary interrupt.
+	pop	ds		;Restore the registers back to
+	pop	dx		;their original values...
+	pop	ax		;
+	popf			;And the flags too.
+	ret			;Return to the calling routine.
+
+; End of CAPSLOCK.ASM code...
+
+  CAPSLOCK.HEX:-
+  --------------
+
+0000: 9C50521E BA40008E DAA01700 0C40A217    .PR.º@..Ú ...@¢.     
+0010: 00CD091F 5A589DC3 9C50521E BA40008E    .Í..ZX.Ã.PR.º@..     
+0020: DAA01700 24BFA217 00CD091F 5A589DC3    Ú ..$¿¢..Í..ZX.Ã     
+
+
+  CAPSLOCK.BAS:-
+  --------------
+
+REM DEMO to toggle the CAPSLOCK key in MikeBASIC.
+REM Original idea copyright, (C)2010, B.Walker, G0LCU.
+REM Issued as Public Domain for MikeOS, MikeBASIC.
+
+REM Load the binary... NOTE! This CAN be POKEd in to make it purely MikeBASIC.
+LOAD "CAPSLOCK.DAT" 65000
+CLS
+CURSOR OFF
+
+REM The only variable is for keyboard access.
+k = 13
+
+REM This is a continuous loop to toggle the CAPSLOCK only.
+REM The NUMLOCK and SCROLL LOCK are also available by POKE(ing) the correct
+REM values into the correct locations.
+
+toggle:
+REM This CALL toggles the CAPSLOCK to ON.
+REM Address 65013 is POKEd to enable the various key locks.
+REM POKE 96 65013 enables NUMLOCK and CAPSLOCK.
+
+CALL 65000
+REM [ENTER/RETURN] to exit this call with the LED ON.
+GETKEY k
+IF k = 13 THEN GOTO cleanexit
+MOVE 0 1
+PRINT "Capslock ON!   "
+PAUSE 5
+
+REM This CALL toggles tha CAPSLOCK to OFF.
+REM Address 65037 is POKEd to disable the various key locks.
+REM POKE 159 65037 disables NUMLOCK and CAPSLOCK.
+
+CALL 65024
+REM [Space Bar] to exit this call with the LED OFF.
+GETKEY k
+IF k = 32 THEN GOTO cleanexit
+MOVE 0 1
+PRINT "Capslock OFF!  "
+PAUSE 5
+GOTO toggle
+
+REM Clean exit back to MikeOS.
+cleanexit:
+CURSOR ON
+PAUSE 20
+CLS
+END
+REM DEMO program end...
+
+-----------------------------------------------------------------------------
+
+  The KEYLOOK.ASM, KEYLOOK.BAS and KEYLOOK.HEX files:-
+  ----------------------------------------------------
+
+  This demonstrates that the two CAPS SHIFT keys give differing results that
+  can be used as special KB events as well as this project.
+
+  KEYLOOK.ASM:-
+  -------------
+
+; KEYLOOK.ASM sub-routine to read CAPS LOCK, NUMLOCK,
+; left CAPS SHIFT and right CAPS SHIFT for MikeOS.
+; Original copyright, (C)2010, B.Walker, G0LCU.
+; For use with MikeBASIC and issued as Public Domain.
+
+; Keyoard HW modification, (C)2010, B.Walker, G0LCU.
+; 8088 CPU instruction set compatible.
+
+; KEYLOOK.ASM, Version 0.00.10, assembly code.
+
+; Assembled under MS-DOS using the AD86 combination.
+; The binary is 21 bytes in size.
+
+	org 65500		;Setup for MikeBASIC program.
+
+; KEYLOOK:
+	pushf			;Store flags and all of the used
+	push	ax		;registers
+	push	dx		;
+	push	ds		;
+	mov	dx,0040h	;Point to the SEGMENT to access
+	mov	ds,dx		;the real time BYTE KB storage.
+	mov	al,[0017h]	;Move the BYTE value from memory
+				;into the AL register ready to read.
+	pop	ds		;Restore the DS and DX registers.
+	pop	dx		;
+	mov	[store],al	;Move the flags to a known memory area.
+	pop	ax		;Restore the remaining registers and
+	popf			;flags.
+	ret			;Return to the calling routine.
+store	db	0c3h		;This is the keyboard flag byte.
+
+; End of KEYLOOK.ASM code...
+
+  KEYLOOK.HEX:-
+  -------------
+
+0000: 9C50521E BA40008E DAA01700 1F5AA2F0    .PR.º@..Ú ...Z¢ð     
+0010: FF589DC3 C3                            .X.ÃÃ                
+
+  KEYLOOK.BAS:-
+  -------------
+
+REM Test the BIOS keyflags address in MikeBASIC.
+REM Original idea copyright, (C)2011, B.Walker, G0LCU.
+REM Issued as Public Domain for MikeOS, MikeBASIC.
+
+REM Poke in the binary to create the KEYLOOK.DAT.
+POKE 156 65500
+POKE 80 65501
+POKE 82 65502
+POKE 30 65503
+POKE 186 65504
+POKE 64 65505
+POKE 0 65506
+POKE 142 65507
+POKE 218 65508
+POKE 160 65509
+POKE 23 65510
+POKE 0 65511
+POKE 31 65512
+POKE 90 65513
+POKE 162 65514
+POKE 240 65515
+POKE 255 65516
+POKE 88 65517
+POKE 157 65518
+POKE 195 65519
+POKE 195 65520
+
+REM Call the above poked, into memory, binary.
+begin:
+CALL 65500
+
+REM Read the address below to obtain the keyflags.
+PEEK c 65520
+
+REM Print the decimal value to the screen.
+PRINT c ;
+PRINT " " ;
+
+REM If both of the CAPS SHIFT keys are pressed ONLY...
+REM ...stop the program and return to MikeOS.
+IF c = 3 THEN GOTO cleanexit
+GOTO begin
+
+REM Quit the program...
+cleanexit:
+PAUSE 20
+END
+REM End of test program.
+
+-----------------------------------------------------------------------------
+
+  KEYFLAGS.ASM:-
+  --------------
+
+; CAPSLOCK, (NUMLOCK), ON/OFF sub-routines along with left
+; CAPS SHIFT and right CAPS SHIFT read subroutine for MikeOS.
+; Original copyright, (C)2010, B.Walker, G0LCU.
+; For use with MikeBASIC and issued as Public Domain.
+
+; KEYFLAGS.ASM, Version 0.00.20, assembly code.
+
+; Assembled under MS-DOS using the AD86 combination.
+; The binary is 75 bytes in size.
+
+	org 60000
+
+; KEYLOCKON:
+	pushf			;Store flags and all of the used
+	push	ax		;registers.
+	push	dx		;
+	push	ds		;
+	mov	dx,0040h	;Point to the SEGMENT to access
+	mov	ds,dx		;the toggled BYTE KB storage.
+	mov	al,[0017h]	;Move the BYTE value from memory
+				;into the AL register.
+	or	al,040h		;SET the required bit, (bit 6),
+				;to a ~1~.
+				;NOTE, change this value for NUMLOCK!
+	mov	[0017h],al	;Replace the modified byte back
+				;into the memory location.
+	int	9		;Now execute the necessary interrupt.
+	call	readflags	;Make sure to store a copy.
+	pop	ds		;Restore the registers back to
+	pop	dx		;their original values...
+	pop	ax		;
+	popf			;And the flags too.
+	ret			;Return to the calling routine.
+
+; KEYLOCKOFF:
+	pushf			;Store flags and all of the used
+	push	ax		;registers.
+	push	dx		;
+	push	ds		;
+	mov	dx,0040h	;Point to the SEGMENT to access
+	mov	ds,dx		;the toggled BYTE KB storage.
+	mov	al,[0017h]	;Move the BYTE value from memory
+				;into the AL register.
+	and	al,0bfh		;RESET the required bit, (bit 6),
+				;to a ~0~, keeping all other bits intact.
+				;NOTE, change this value for NUMLOCK!
+	mov	[0017h],al	;Replace the modified byte back
+				;into the memory location.
+	int	9		;Now execute the necessary interrupt.
+	call	readflags	;Make sure to store a copy.
+	pop	ds		;Restore the registers back to
+	pop	dx		;their original values...
+	pop	ax		;
+	popf			;And the flags too.
+	ret			;Return to the calling routine.
+
+readflags:
+	pushf			;Store flags and all of the used
+	push	ax		;registers
+	push	dx		;
+	push	ds		;
+	mov	dx,0040h	;Point to the SEGMENT to access
+	mov	ds,dx		;the real time BYTE KB storage.
+	mov	al,[0017h]	;Move the BYTE value from memory
+				;into the AL register ready to read.
+	pop	ds		;Restore the DS and DX registers.
+	pop	dx		;
+	mov	[store],al	;Move the flags to a known memory area.
+	pop	ax		;Restore the remaining registers and
+	popf			;flags.
+	ret			;Return to the calling routine.
+store	db	0c3h		;This is the keyboard flag byte.
+
+; End of KEYFLAGS.ASM code...
+
+  KEYFLAGS.HEX:-
+  --------------
+
+0000: 9C50521E BA40008E DAA01700 0C40A217    .PR.º@..Ú ...@¢.     
+0010: 00CD09E8 20001F5A 589DC39C 50521EBA    .Í.è ..ZX.Ã.PR.º     
+0020: 40008EDA A0170024 BFA21700 CD09E805    @..Ú ..$¿¢..Í.è.     
+0030: 001F5A58 9DC39C50 521EBA40 008EDAA0    ..ZX.Ã.PR.º@..Ú      
+0040: 17001F5A A2AAEA58 9DC3C3               ...Z¢ªêX.ÃÃ          
+
+=============================================================================
+
+                                IMPORTANT:-
+                                -----------
+
+    The Legal Stuff:-
+    -----------------
+
+    These programs are Freeware and no profit will be made from them,
+    also all of the files must remain unaltered and intact including this
+    one. The author is not responsible for any damage to, or loss of, or
+    failure of equipment or data caused in any way by the use of these
+    programs. There is NO warranty with the use of these software releases
+    and YOU USE THEM AT YOUR OWN RISK.
+
+-----------------------------------------------------------------------------
+
+                                 WARNING.
+                                 --------
+
+  1) DISCONNECT any faulty equipment under test from the MAINS supply.
+  2) If a DC supply is used do NOT reverse polarity the connections.
+  3) Do NOT power up any electronic item until it is safe to do so.
+  4) CHECK and RECHECK all of your construction and repair work thoroughly.
+  5) Handle ALL tools used with care.
+  6) Beware of ALL types of solvents, glues and etching fluids.
+  7) NEVER leave a soldering iron switched on unattended.
+  8) KEEP everything OUT of the reach of small children.
+  9) Switch OFF the computer before disconnecting or connecting any hardware.
+ 10) And finally read 1) to 9) again.
+
+-----------------------------------------------------------------------------
+
+   Contact:-
+   ---------
+
+   Mr Barry Walker, G0LCU,
+   70 King George Road,
+   Loughborough,
+   Leicestershire,
+   LE11 2PA,
+   England.
+
+   Email:-     wisecracker@tesco.net
+   URL:-       http://homepages.tesco.net/wisecracker/G0LCU.HTM
+
+   (Author of the ~TestGear?~ projects in the ~docs/hard~ drawer of AMINET.)
+
+               http://aminet.net/search?readme=wisecracker
+
+=============================================================================

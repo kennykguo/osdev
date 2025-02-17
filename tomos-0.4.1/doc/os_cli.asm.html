@@ -1,0 +1,49 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="os_cli.asm">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class="select"><a href="files.html">Files</a></li>
+<li class=""><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both">
+<table>
+<tr><td>
+		<h2 class="header">os_cli.asm</h2>
+</td></tr>
+<tr><td>
+<p class="description"></p>
+</td></tr>
+</table>
+<table class="section_table">
+<tr><td celspan="2"><h3>Function list</h3></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_command_line_get">os_command_line_get</a></p></td><td>Get arguments passed to the program</td></tr>
+</table>
+		<h3>Descriptions</h3>
+		<h4 id="os_command_line_get" class="title">os_command_line_get</h4>
+		<p class="description">get arguments passed to the program</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - number of arguments</div>
+			<div class="param">ES:DI - command line</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">Format of the command line is arg1[byte 0]arg2[byte 0]argN[byte0][byte 0]</div>
+		</div>
+		<div class="section">Section : command line</div>
+</div>
+	</body>
+</html>

@@ -1,0 +1,55 @@
+
+=============================================================================
+
+                              Arduino Parts List.
+                              -------------------
+
+  1) R1 .............................  1 KilOhm, 1/8 Watt.
+  2) R2, R4, R5, R6 .................  10 KilOhms, 1/8 Watt.
+  3) R3 .............................  4.7 KilOhms, 1/8 Watt.
+  4) D1, D2 .........................  1N4148 silicon diode.
+  5) T1 .............................  BC547, or similar.
+  6) T2 .............................  BC557, or similar.
+  7) C1 .............................  10uF, 16V, electrolytic capacitor.
+  8) Small piece of stripboard, 9 strips by 23 holes.
+  9) Terminal pins for insertion into Arduino board.
+ 10) 3 way terminal block.
+ 11) Red and Black connecting wire.
+ 12) Stereo audio coaxial cable.
+ 13) 9 or 25 way ~D~ type socket for serial connection.
+ 14) Matching cover for the ~D~ type socket.
+ 15) Heat Shrink Sleeving.
+ 16) Stick-on cable clips.
+ 17) Small Tie Wraps.
+
+ [18) A small 12V Regulated Power Supply for the Arduino board.]
+
+  Notes:-
+  -------
+
+  1) Tolerances are + or - 10% or better.
+  2) Parts can be obtained from any source, (in fact nearly all of mine were
+     from the Junk Box)...
+  3) Items 15), 16) and 17) are optional.
+
+-----------------------------------------------------------------------------
+
+
+   Contact:-
+   ---------
+
+   Mr Barry Walker, G0LCU,
+   70 King George Road,
+   Loughborough,
+   Leicestershire,
+   LE11 2PA,
+   England.
+
+   Email:-     wisecracker@tesco.net
+   URL:-       http://homepages.tesco.net/wisecracker/G0LCU.HTM
+
+   (Author of the ~TestGear?~ projects in the ~docs/hard~ drawer of AMINET.)
+
+               http://aminet.net/search?readme=wisecracker
+
+=============================================================================

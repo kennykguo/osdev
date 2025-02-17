@@ -1,0 +1,267 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="sections">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class=""><a href="files.html">Files</a></li>
+<li class="select"><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both"><table class="section_table"><tr><td colspan="2"><h3>Sections index</h3></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#FAT12">FAT12</a></p></td><td class="description"><p>FAT12 functions. NOT AVAILABLE IN USER SPACE.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#PC speaker">PC speaker</a></p></td><td class="description"><p>Handle PC speaker.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#char">char</a></p></td><td class="description"><p>Maniputate character. Uppercase, lowwercase, etc.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#command line">command line</a></p></td><td class="description"><p>Function ease command line manipulations.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#cursor">cursor</a></p></td><td class="description"><p>Handle cursor in a text mode.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#date">date</a></p></td><td class="description"><p>Set date format, get date, etc.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#debug">debug</a></p></td><td class="description"><p>Subroutines easing debuging.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#dialog">dialog</a></p></td><td class="description"><p>Draw dialogs on the screen.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#drawing">drawing</a></p></td><td class="description"><p>Drawing lines, characters on the screen in text mode.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#error">error</a></p></td><td class="description"><p>Error handling.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#files">files</a></p></td><td class="description"><p>Copy, create, delete, etc files.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#floppy">floppy</a></p></td><td class="description"><p>Handle low-level floppy. NOT AVAILABLE IN USER SPACE.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#integer">integer</a></p></td><td class="description"><p>Converting integer value into different forms.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#keyboard">keyboard</a></p></td><td class="description"><p>Handle keyboard functions as reading keyboard buffer, waiting for string, etc.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#long int">long int</a></p></td><td class="description"><p>Converting long integer value into different forms.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#memory">memory</a></p></td><td class="description"><p>Memory alloc, free, realloc, etc .</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#misc">misc</a></p></td><td class="description"><p>Miscelaous function.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#mouse">mouse</a></p></td><td class="description"><p>Mouse handling.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#print">print</a></p></td><td class="description"><p>Print characters on the screen in a text mode.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#screen">screen</a></p></td><td class="description"><p>Clear screen, roll up, roll down, etc.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#serial port">serial port</a></p></td><td class="description"><p>Send/get byte to/from serial port.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#string">string</a></p></td><td class="description"><p>Copying , converting, joining strings.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#system">system</a></p></td><td class="description"><p>System subroutines which shouldnt be used by applications.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#time">time</a></p></td><td class="description"><p>Get time, set format, etc.</p></td></tr>
+<tr><td class="name"><p style="font-size:big"><a href="#tomos syscalls">tomos syscalls</a></p></td><td class="description"><p>Calling, setting system calls.</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="floppy">floppy</h3><p style="margin:0px 0px 5px 10px;font-size:small">Handle low-level floppy. NOT AVAILABLE IN USER SPACE.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#_os_int_restet_floppy">_os_int_restet_floppy</a></p></td><td class="description"><p>Reset floppy drive</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#_os_int_l2hts">_os_int_l2hts</a></p></td><td class="description"><p>Calculate head, track and sector settings for int...</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_get_disk_description_table">_os_get_disk_description_table</a></p></td><td class="description"><p>Return first sector of root directory</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_disk_convert_l2hts">_os_disk_convert_l2hts</a></p></td><td class="description"><p>Calculate head, track and sector for int 13h</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="command line">command line</h3><p style="margin:0px 0px 5px 10px;font-size:small">Function ease command line manipulations.</p></td><tr>
+<tr><td class="name"><p><a href="os_cli.asm.html#os_command_line_get">os_command_line_get</a></p></td><td class="description"><p>Get arguments passed to the program</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="files">files</h3><p style="margin:0px 0px 5px 10px;font-size:small">Copy, create, delete, etc files.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_get_file_list">os_get_file_list</a></p></td><td class="description"><p>Generate comma-separated string of files on floppy</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_filename_convert">os_filename_convert</a></p></td><td class="description"><p>Change 'TEST.BIN' into 'TEST    BIN' as per FAT12</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_load_file">os_load_file</a></p></td><td class="description"><p>Load file into bottom-half of TomOS RAM</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_file_write">os_file_write</a></p></td><td class="description"><p>Save (max 64K) file to disk</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_file_exists">os_file_exists</a></p></td><td class="description"><p>Check for presence of file on the floppy</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_remove_file">os_remove_file</a></p></td><td class="description"><p>Deletes the specified file from the filesystem</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_rename_file">os_rename_file</a></p></td><td class="description"><p>Change the name of a file on the disk</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_get_file_size">os_get_file_size</a></p></td><td class="description"><p>Get file size information for specified file</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_dir_open">os_dir_open</a></p></td><td class="description"><p>Open a directory</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_dir_next_file">os_dir_next_file</a></p></td><td class="description"><p>Get a file from the opened directory.</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_dir_close">os_dir_close</a></p></td><td class="description"><p>Close a directory</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_dir_change">os_dir_change</a></p></td><td class="description"><p>Change a directory</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_file_convert_f2d">os_file_convert_f2d</a></p></td><td class="description"><p>Converts filename from fat format to dot format</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#os_file_convert_d2f">os_file_convert_d2f</a></p></td><td class="description"><p>Converts filename from dot format to fat format</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="date">date</h3><p style="margin:0px 0px 5px 10px;font-size:small">Set date format, get date, etc.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_date_set_fmt">os_date_set_fmt</a></p></td><td class="description"><p>Set date reporting format (M/D/Y, D/M/Y or Y/M/D - 0, 1, 2)</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_date_get_string">os_date_get_string</a></p></td><td class="description"><p>Get current date in a string (eg '12/31/2007')</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="serial port">serial port</h3><p style="margin:0px 0px 5px 10px;font-size:small">Send/get byte to/from serial port.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_serial_send">os_serial_send</a></p></td><td class="description"><p>Send a byte via the serial port</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_serial_get">os_serial_get</a></p></td><td class="description"><p>Get a byte from the serial port</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="string">string</h3><p style="margin:0px 0px 5px 10px;font-size:small">Copying , converting, joining strings.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_int_to_string">os_int_to_string</a></p></td><td class="description"><p>Convert value in DX to string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_length">os_string_length</a></p></td><td class="description"><p>Return length of a string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_not_find_char">os_string_not_find_char</a></p></td><td class="description"><p>Find location of first non character in a string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_find_char">os_string_find_char</a></p></td><td class="description"><p>Find location of character in a string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_uppercase">os_string_uppercase</a></p></td><td class="description"><p>Convert zero-terminated string to upper case</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_n_uppercase">os_string_n_uppercase</a></p></td><td class="description"><p>Convert n first characters of zero-terminated string to...</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_lowercase">os_string_lowercase</a></p></td><td class="description"><p>Convert zero-terminated string to lower case</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_copy">os_string_copy</a></p></td><td class="description"><p>Copy one string into another</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_truncate">os_string_truncate</a></p></td><td class="description"><p>Chop string down to specified number of characters</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_join">os_string_join</a></p></td><td class="description"><p>Join two strings into a third string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_chomp">os_string_chomp</a></p></td><td class="description"><p>Strip leading and trailing spaces from a string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_strip">os_string_strip</a></p></td><td class="description"><p>Removes specified character from a string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_compare">os_string_compare</a></p></td><td class="description"><p>See if two strings match</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_n_compare">os_string_n_compare</a></p></td><td class="description"><p>See if n characters of two strings match.</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_string_strincmp">os_string_strincmp</a></p></td><td class="description"><p>See if two strings match up to set number of chars</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="print">print</h3><p style="margin:0px 0px 5px 10px;font-size:small">Print characters on the screen in a text mode.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_string">os_print_string</a></p></td><td class="description"><p>Displays text</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_horiz_line">os_print_horiz_line</a></p></td><td class="description"><p>Draw a horizontal line on the screen</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_char">os_print_char</a></p></td><td class="description"><p>Reset cursor to start of next line</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_newline">os_print_newline</a></p></td><td class="description"><p>Reset cursor to start of next line</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_space">os_print_space</a></p></td><td class="description"><p>Print a space to the screen</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_dump_string">os_dump_string</a></p></td><td class="description"><p>Dump string as hex bytes and printable characters</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_digit">os_print_digit</a></p></td><td class="description"><p>Displays contents of AX as a single digit. Works up to base...</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_1hex">os_print_1hex</a></p></td><td class="description"><p>Displays low nibble of DL in hex format</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_2hex">os_print_2hex</a></p></td><td class="description"><p>Displays DL in hex format</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_print_4hex">os_print_4hex</a></p></td><td class="description"><p>Displays DX in hex format</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="dialog">dialog</h3><p style="margin:0px 0px 5px 10px;font-size:small">Draw dialogs on the screen.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_file_selector">os_file_selector</a></p></td><td class="description"><p>Show a file selection dialog</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_list_dialog">os_list_dialog</a></p></td><td class="description"><p>Show a dialog with a list of options</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_input_dialog">os_input_dialog</a></p></td><td class="description"><p>Get text string from user via a dialog box</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_dialog_box">os_dialog_box</a></p></td><td class="description"><p>Print dialog box in middle of screen, with button(s)</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="integer">integer</h3><p style="margin:0px 0px 5px 10px;font-size:small">Converting integer value into different forms.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_bcd_to_int">os_bcd_to_int</a></p></td><td class="description"><p>Converts binary coded decimal number to an integer</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="mouse">mouse</h3><p style="margin:0px 0px 5px 10px;font-size:small">Mouse handling.</p></td><tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_init">os_mouse_init</a></p></td><td class="description"><p>Init mouse.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_show">os_mouse_show</a></p></td><td class="description"><p>Show mouse cursor.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_hide">os_mouse_hide</a></p></td><td class="description"><p>Hide mouse cursor.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_get_position">os_mouse_get_position</a></p></td><td class="description"><p>Get cursor position.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_set_position">os_mouse_set_position</a></p></td><td class="description"><p>Set cursor position.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_get_bt_press_info">os_mouse_get_bt_press_info</a></p></td><td class="description"><p>Get mouse button press information.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_get_bt_release_info">os_mouse_get_bt_release_info</a></p></td><td class="description"><p>Get mouse button press information.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_set_h_limit">os_mouse_set_h_limit</a></p></td><td class="description"><p>Set mouse horizontal min/max position.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_set_v_limit">os_mouse_set_v_limit</a></p></td><td class="description"><p>Set mouse vertical min/max position.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_set_text_cursor">os_mouse_set_text_cursor</a></p></td><td class="description"><p>Sets mouse cursor.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_set_user_subroutine">os_mouse_set_user_subroutine</a></p></td><td class="description"><p>Set Mouse User Defined Subroutine and Input Mask.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_disable">os_mouse_disable</a></p></td><td class="description"><p>Disable mouse driver.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_enable">os_mouse_enable</a></p></td><td class="description"><p>Enable mouse driver.</p></td></tr>
+<tr><td class="name"><p><a href="os_mouse_syscalls.asm.html#os_mouse_wait_for_l_click">os_mouse_wait_for_l_click</a></p></td><td class="description"><p>Waits for left mouse button click.</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="debug">debug</h3><p style="margin:0px 0px 5px 10px;font-size:small">Subroutines easing debuging.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_dump_registers">os_dump_registers</a></p></td><td class="description"><p>Displays register contents in hex on the screen</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="FAT12">FAT12</h3><p style="margin:0px 0px 5px 10px;font-size:small">FAT12 functions. NOT AVAILABLE IN USER SPACE.</p></td><tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_convert_filename_d2f">_os_fat_convert_filename_d2f</a></p></td><td class="description"><p>Converts filename from fat format to dot format</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_convert_filename_f2d">_os_fat_convert_filename_f2d</a></p></td><td class="description"><p>Converts filename from fat format to dot format</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_file_get_free_FAT_entry">_os_file_get_free_FAT_entry</a></p></td><td class="description"><p>Get a pointer of a free entry in the FAT table</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_create_empty_FAT_entry">_os_fat_create_empty_FAT_entry</a></p></td><td class="description"><p>Creates a new 0-byte file on the floppy disk</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_disk_get_root_entry">_os_disk_get_root_entry</a></p></td><td class="description"><p>Search RAM copy of root dir for file entry</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_disk_read_fat">_os_disk_read_fat</a></p></td><td class="description"><p>Read FAT entry from floppy into os_buffer</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_disk_write_fat">_os_disk_write_fat</a></p></td><td class="description"><p>Save FAT contents from os_buffer in RAM to disk</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_disk_read_root_dir">_os_disk_read_root_dir</a></p></td><td class="description"><p>Get the root directory contents</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_disk_write_root_dir">_os_disk_write_root_dir</a></p></td><td class="description"><p>Write root directory contents from os_buffer to disk</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_disk_reset_floppy">_os_disk_reset_floppy</a></p></td><td class="description"><p>Reset floppy drive</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_root_dir_size">_os_fat_get_root_dir_size</a></p></td><td class="description"><p>Return a size of root directory</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_data_region">_os_fat_get_data_region</a></p></td><td class="description"><p>Return first sector of data region</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_root_dir_region">_os_fat_get_root_dir_region</a></p></td><td class="description"><p>Gets the first section number of the root directory</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_root_directory">_os_fat_get_root_directory</a></p></td><td class="description"><p>Copy the root directory to the buffer.</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_FAT_table_region">_os_fat_get_FAT_table_region</a></p></td><td class="description"><p>Return the fisrt sector of FAT table</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_FAT_table">_os_fat_get_FAT_table</a></p></td><td class="description"><p>Copy fat table to the buffer</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_set_cluster">_os_fat_set_cluster</a></p></td><td class="description"><p>Set a 12 bit value under a specigied cluster in the FAT...</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_calculate_next_cluster">_os_fat_calculate_next_cluster</a></p></td><td class="description"><p>Calculate next cluster</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_first_sector_of_cluster">_os_fat_get_first_sector_of_cluster</a></p></td><td class="description"><p>Translates cluster number to the cector number</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_cluster_size_bytes">_os_fat_get_cluster_size_bytes</a></p></td><td class="description"><p>Return a cluster size in bytes</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_number_of_clusters">_os_fat_get_number_of_clusters</a></p></td><td class="description"><p></p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_cluster">_os_fat_get_cluster</a></p></td><td class="description"><p>Get n-th cluster of the file</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_copy_cluster">_os_fat_copy_cluster</a></p></td><td class="description"><p></p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_copy_block">_os_fat_copy_block</a></p></td><td class="description"><p></p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_entity">_os_fat_get_entity</a></p></td><td class="description"><p></p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_entity_by_index">_os_fat_get_entity_by_index</a></p></td><td class="description"><p></p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_setup">_os_fat_setup</a></p></td><td class="description"><p>Setup FAT12 filesystem env</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_change_active_dir">_os_fat_change_active_dir</a></p></td><td class="description"><p>Change a directory. Directory must exist in an active...</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_change_working_dir">_os_fat_change_working_dir</a></p></td><td class="description"><p>Change a directory. Directory must exist in an active...</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_get_jump_index">_os_fat_get_jump_index</a></p></td><td class="description"><p>Get direction of jump in a directory treedirectory  ..  is ...</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_open_dir">_os_fat_open_dir</a></p></td><td class="description"><p>Open a directory to read</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_dir_next_file">_os_fat_dir_next_file</a></p></td><td class="description"><p>Get file FAT12_ENTITY from the opened directory</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_root_dir_reload_buffer">_os_fat_root_dir_reload_buffer</a></p></td><td class="description"><p>Reload buffer for direcory entities stored by HDIR_STRUC</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_dir_reload_buffer">_os_fat_dir_reload_buffer</a></p></td><td class="description"><p></p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_close_dir">_os_fat_close_dir</a></p></td><td class="description"><p></p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_create_empty_HDIR">_os_fat_create_empty_HDIR</a></p></td><td class="description"><p>Create empty HDIR_STRUCT instance</p></td></tr>
+<tr><td class="name"><p><a href="os_fat.asm.html#_os_fat_dir_calculate_num_ent">_os_fat_dir_calculate_num_ent</a></p></td><td class="description"><p></p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="drawing">drawing</h3><p style="margin:0px 0px 5px 10px;font-size:small">Drawing lines, characters on the screen in text mode.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_draw_block">os_draw_block</a></p></td><td class="description"><p>Render block of specified colour</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_draw_background">os_draw_background</a></p></td><td class="description"><p>Clear screen with white top and bottom bars,containing...</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="memory">memory</h3><p style="margin:0px 0px 5px 10px;font-size:small">Memory alloc, free, realloc, etc .</p></td><tr>
+<tr><td class="name"><p><a href="os_mm.asm.html#os_mm_init">os_mm_init</a></p></td><td class="description"><p>Init memory manager.</p></td></tr>
+<tr><td class="name"><p><a href="os_mm.asm.html#os_mm_release">os_mm_release</a></p></td><td class="description"><p>Resets memory manager.</p></td></tr>
+<tr><td class="name"><p><a href="os_mm.asm.html#os_mm_alloc">os_mm_alloc</a></p></td><td class="description"><p>Allocate memory block.</p></td></tr>
+<tr><td class="name"><p><a href="os_mm.asm.html#os_mm_realloc">os_mm_realloc</a></p></td><td class="description"><p>Reallocate memory block allocated by os_mm_alloc.</p></td></tr>
+<tr><td class="name"><p><a href="os_mm.asm.html#os_mm_free">os_mm_free</a></p></td><td class="description"><p>Free allocated memory.</p></td></tr>
+<tr><td class="name"><p><a href="os_mm.asm.html#os_mm_get_size">os_mm_get_size</a></p></td><td class="description"><p>Get size of alloced memory block.Returned value might vary...</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_memory_set">os_memory_set</a></p></td><td class="description"><p>Set block of memory.</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_memory_copy">os_memory_copy</a></p></td><td class="description"><p>Copy block of bytes.</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="misc">misc</h3><p style="margin:0px 0px 5px 10px;font-size:small">Miscelaous function.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_pause">os_pause</a></p></td><td class="description"><p>Delay execution for specified microseconds</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="cursor">cursor</h3><p style="margin:0px 0px 5px 10px;font-size:small">Handle cursor in a text mode.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_cursor_move">os_cursor_move</a></p></td><td class="description"><p>Moves cursor in text mode</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_cursor_get_pos">os_cursor_get_pos</a></p></td><td class="description"><p>Return position of text cursor</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_cursor_show">os_cursor_show</a></p></td><td class="description"><p>Turns on cursor in text mode</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_cursor_hide">os_cursor_hide</a></p></td><td class="description"><p>Turns off cursor in text mode</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="system">system</h3><p style="margin:0px 0px 5px 10px;font-size:small">System subroutines which shouldnt be used by applications.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_get_api_version">os_get_api_version</a></p></td><td class="description"><p>Return current version of TomOS API</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_get_int_handler">os_get_int_handler</a></p></td><td class="description"><p>Get the segment:offset of an interrupt handler</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_modify_int_handler">os_modify_int_handler</a></p></td><td class="description"><p>Change location of interrupt handler</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_execute_program">os_execute_program</a></p></td><td class="description"><p>Run code loaded at 100h in RAM (current CS)</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_int_reboot">os_int_reboot</a></p></td><td class="description"><p>Reboot machine via keyboard controller</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="time">time</h3><p style="margin:0px 0px 5px 10px;font-size:small">Get time, set format, etc.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_set_time_fmt">os_set_time_fmt</a></p></td><td class="description"><p>Set time reporting format (eg '10:25 AM' or '2300 hours')</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_get_time_string">os_get_time_string</a></p></td><td class="description"><p>Get current time in a string (eg '10:25')</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="error">error</h3><p style="margin:0px 0px 5px 10px;font-size:small">Error handling.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_fatal_error">os_fatal_error</a></p></td><td class="description"><p>Display error message, take keypress, and restart OS</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="keyboard">keyboard</h3><p style="margin:0px 0px 5px 10px;font-size:small">Handle keyboard functions as reading keyboard buffer, waiting for string, etc.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_kbd_flush_buffer">os_kbd_flush_buffer</a></p></td><td class="description"><p>Clear the keyboard buffer</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_kbd_check_buffer">os_kbd_check_buffer</a></p></td><td class="description"><p>Check if any character in the keyboard buffer</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_kbd_get_char">os_kbd_get_char</a></p></td><td class="description"><p>Get charcter from the keyboard buffer. If the buffer is...</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_kbd_wait_for_key">os_kbd_wait_for_key</a></p></td><td class="description"><p>Waits for keypress and returns key</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_kbd_check_for_key">os_kbd_check_for_key</a></p></td><td class="description"><p>Scans keyboard for input, but doesn't wait</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_input_string">os_input_string</a></p></td><td class="description"><p>Take string from keyboard entry</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="tomos syscalls">tomos syscalls</h3><p style="margin:0px 0px 5px 10px;font-size:small">Calling, setting system calls.</p></td><tr>
+<tr><td class="name"><p><a href="os_int47h.asm.html#os_int47h_setup">os_int47h_setup</a></p></td><td class="description"><p>Set TomOS system calls on int 47h. Cant be called by...</p></td></tr>
+<tr><td class="name"><p><a href="os_int47h.asm.html#os_int47h">os_int47h</a></p></td><td class="description"><p>Int47 handler.</p></td></tr>
+<tr><td class="name"><p><a href="os_int47h.asm.html#os_int47h_get_syscall">os_int47h_get_syscall</a></p></td><td class="description"><p>Get addres of syscall.</p></td></tr>
+<tr><td class="name"><p><a href="os_int47h.asm.html#os_int47h_set_syscall">os_int47h_set_syscall</a></p></td><td class="description"><p>Set addres of syscall.</p></td></tr>
+<tr><td class="name"><p><a href="os_int47h.asm.html#os_int47h_get_syscall_id">os_int47h_get_syscall_id</a></p></td><td class="description"><p>Get id of syscall by address.</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="long int">long int</h3><p style="margin:0px 0px 5px 10px;font-size:small">Converting long integer value into different forms.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_long_int_to_string">os_long_int_to_string</a></p></td><td class="description"><p>Convert value in DX:CX to string</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_long_int_negate">os_long_int_negate</a></p></td><td class="description"><p>Multiply value in DX:BX by -1</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="screen">screen</h3><p style="margin:0px 0px 5px 10px;font-size:small">Clear screen, roll up, roll down, etc.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_clear_screen">os_clear_screen</a></p></td><td class="description"><p>Clears the screen to background</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="char">char</h3><p style="margin:0px 0px 5px 10px;font-size:small">maniputate character. Uppercase, lowwercase, etc.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_char_uppercase">os_char_uppercase</a></p></td><td class="description"><p>Change a character to a capital</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_char_lowwercase">os_char_lowwercase</a></p></td><td class="description"><p>Change a character to a small letter</p></td></tr>
+</table>
+<table class="section_table">
+<tr><td colspan="2"><h3 style="margin-bottom:1px" id="PC speaker">PC speaker</h3><p style="margin:0px 0px 5px 10px;font-size:small">Handle PC speaker.</p></td><tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_speaker_tone">os_speaker_tone</a></p></td><td class="description"><p>Generate PC speaker tone (call _os_speaker_off after)</p></td></tr>
+<tr><td class="name"><p><a href="syscalls.asm.html#os_speaker_off">os_speaker_off</a></p></td><td class="description"><p>Turn off PC speaker</p></td></tr>
+</table>
+</div>
+	</body>
+</html>

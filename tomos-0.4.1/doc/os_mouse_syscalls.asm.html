@@ -1,0 +1,282 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="os_mouse_syscalls.asm">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class="select"><a href="files.html">Files</a></li>
+<li class=""><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both">
+<table>
+<tr><td>
+		<h2 class="header">os_mouse_syscalls.asm</h2>
+</td></tr>
+<tr><td>
+<p class="description"> File contains system calls handling mouse</p>
+</td></tr>
+</table>
+<table class="section_table">
+<tr><td celspan="2"><h3>Function list</h3></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_init">os_mouse_init</a></p></td><td>Init mouse.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_show">os_mouse_show</a></p></td><td>Show mouse cursor.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_hide">os_mouse_hide</a></p></td><td>Hide mouse cursor.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_get_position">os_mouse_get_position</a></p></td><td>Get cursor position.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_set_position">os_mouse_set_position</a></p></td><td>Set cursor position.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_get_bt_press_info">os_mouse_get_bt_press_info</a></p></td><td>Get mouse button press information.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_get_bt_release_info">os_mouse_get_bt_release_info</a></p></td><td>Get mouse button press information.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_set_h_limit">os_mouse_set_h_limit</a></p></td><td>Set mouse horizontal min/max position.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_set_v_limit">os_mouse_set_v_limit</a></p></td><td>Set mouse vertical min/max position.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_set_text_cursor">os_mouse_set_text_cursor</a></p></td><td>Sets mouse cursor.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_set_user_subroutine">os_mouse_set_user_subroutine</a></p></td><td>Set Mouse User Defined Subroutine and Input Mask.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_disable">os_mouse_disable</a></p></td><td>Disable mouse driver.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_enable">os_mouse_enable</a></p></td><td>Enable mouse driver.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_mouse_wait_for_l_click">os_mouse_wait_for_l_click</a></p></td><td>Waits for left mouse button click.</td></tr>
+</table>
+		<h3>Descriptions</h3>
+		<h4 id="os_mouse_init" class="title">os_mouse_init</h4>
+		<p class="description">Init mouse.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AH - 0000h hardware/driver not installed</div>
+			<div class="param">AH - FFFFh hardware/driver installed, BX - number of buttons (TomOS supports only 2 so far)</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_show" class="title">os_mouse_show</h4>
+		<p class="description">Show mouse cursor.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_hide" class="title">os_mouse_hide</h4>
+		<p class="description">Hide mouse cursor.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_get_position" class="title">os_mouse_get_position</h4>
+		<p class="description">Get cursor position.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">BX - button states (see #1)</div>
+			<div class="param">CX - horizontal position (row)</div>
+			<div class="param">DX - vertical position (column)</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> (#1) Button states: (defined in include/tomos.inc)</div>
+<div class="param"> MOUSE_FLAG_LEFT_PRESSED (equals 0) - left button pressed if 1</div>
+<div class="param"> MOUSE_FLAG_RIGHT_PRESSED (equals 1) - right button pressed if 1</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_set_position" class="title">os_mouse_set_position</h4>
+		<p class="description">Set cursor position.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">CX - column</div>
+			<div class="param">DX - row</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_get_bt_press_info" class="title">os_mouse_get_bt_press_info</h4>
+		<p class="description">Get mouse button press information.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - button number (see #1)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - button states (see #2)</div>
+			<div class="param">BX - number of times specified button has been pressed since last call</div>
+			<div class="param">CX - column at time specified button was last pressed</div>
+			<div class="param">DX - row at time specified button was last pressed</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> (#1)Button states: (defined in include/tomos.inc)</div>
+<div class="param"> MOUSE_LEFT_BUTTON (equals 0) - left button.</div>
+<div class="param"> MOUSE_RIGHT_BUTTON (equals 1) - right button.</div>
+<div class="param"> (#2) Values for mouse button number (BX):</div>
+<div class="param"> MOUSE_STATE_LEFT_BUTTON (bit 0) - value in BX coresponds to a left button.</div>
+<div class="param"> MOUSE_STATE_RIGHT_BUTTON (bit 1) - value in BX coresponds to a right button.</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_get_bt_release_info" class="title">os_mouse_get_bt_release_info</h4>
+		<p class="description">Get mouse button press information.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - button number (see #1)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - button states (see #2)</div>
+			<div class="param">BX - number of times specified button has been pressed since last call</div>
+			<div class="param">CX - column at time specified button was last pressed</div>
+			<div class="param">DX - row at time specified button was last pressed</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> (#1)Button states: (defined in include/tomos.inc)</div>
+<div class="param"> MOUSE_LEFT_BUTTON (equals 0) - left button.</div>
+<div class="param"> MOUSE_RIGHT_BUTTON (equals 1) - right button.</div>
+<div class="param"> (#2) Values for mouse button number (BX):</div>
+<div class="param"> MOUSE_STATE_LEFT_BUTTON (bit 0) - value in BX coresponds to a left button.</div>
+<div class="param"> MOUSE_STATE_RIGHT_BUTTON (bit 1) - value in BX coresponds to a right button.</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_set_h_limit" class="title">os_mouse_set_h_limit</h4>
+		<p class="description">Set mouse horizontal min/max position.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">CX - minimum column</div>
+			<div class="param">DX - maximum column</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> When minimum is greater than maximum it swaps them</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_set_v_limit" class="title">os_mouse_set_v_limit</h4>
+		<p class="description">Set mouse vertical min/max position.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">CX - minimum row</div>
+			<div class="param">DX - maximum row</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> When minimum is greater than maximum it swaps them</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_set_text_cursor" class="title">os_mouse_set_text_cursor</h4>
+		<p class="description">Sets mouse cursor.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">CX - screen mask</div>
+			<div class="param">DX - cursor mask</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> Character/attribute data at the current screen position is ANDed with the screen mask</div>
+<div class="param"> and then XORed with the  cursor mask</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_set_user_subroutine" class="title">os_mouse_set_user_subroutine</h4>
+		<p class="description">Set Mouse User Defined Subroutine and Input Mask.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">CX - call mask (see #4)</div>
+			<div class="param">ES:DX - FAR routine (see #5)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> The driver calls a user subroutine if one of the events occurs specified int call mask.</div>
+<div class="param"> (#4) Bitfields for mouse call mask:</div>
+<div class="param"> defined in include/tomos.inc.</div>
+<div class="param"> Bit(s) Description</div>
+<div class="param"> MOUSE_EVENT_MOVED (bit 0) call if mouse moves</div>
+<div class="param"> MOUSE_EVENT_LEFT_PRESSED (bit 1) call if left button pressed</div>
+<div class="param"> MOUSE_EVENT_LEFT_RELEASED(bit 2) call if left button released</div>
+<div class="param"> MOUSE_EVENT_RIGHT_PRESSED (bit 3) call if right button pressed</div>
+<div class="param"> MOUSE_EVENT_RIGHT_RELEASED (bit 4) call if right button released</div>
+<div class="param"> 7-15 unused</div>
+<div class="param"> (#5) Values interrupt routine is called with:.</div>
+<div class="param"> AX = condition mask (same bit assignments as call mask).</div>
+<div class="param"> BX = button state.</div>
+<div class="param"> CX = cursor column.</div>
+<div class="param"> DX = cursor row.</div>
+<div class="param"> SI = horizontal mickey count.</div>
+<div class="param"> DI = vertical mickey count</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_disable" class="title">os_mouse_disable</h4>
+		<p class="description">Disable mouse driver.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - status 001Fh successful</div>
+			<div class="param">AX - status FFFFh unsuccessful</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> Restores vectors for INT 10 and INT 74</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_enable" class="title">os_mouse_enable</h4>
+		<p class="description">Enable mouse driver.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 0020h successful</div>
+			<div class="param">AX - FFFFh unsuccesful</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> Restores vectors for INT 10h and INT 74h</div>
+<div class="param"> which were removed by function 1Fh.</div>
+		</div>
+		<div class="section">Section : mouse</div>
+		<h4 id="os_mouse_wait_for_l_click" class="title">os_mouse_wait_for_l_click</h4>
+		<p class="description">Waits for left mouse button click.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - x postion of click</div>
+			<div class="param">BX - y position of click </div>
+		</div>
+		<div class="section">Section : mouse</div>
+</div>
+	</body>
+</html>

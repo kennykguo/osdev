@@ -1,0 +1,356 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+
+body#examples{
+    background-color: #DDDDDD;
+    font-family:courier;
+    font-weight: 400;
+    font-size: 14pt;
+}
+
+
+#examples .center{
+    text-align:center;
+}
+
+#examples .clear{
+    clear:both;
+}
+
+#examples .paragraph{
+    margin-left: 10%;
+    border-bottom: 1px solid black;
+    float: left;
+    width: 90%;
+}
+
+#examples .code_address{
+    text-decoration: none;       
+}
+
+#examples .filename{
+    font-style: italic;
+    font-weight: 600;
+
+}
+
+#examples .code{
+    background-image: url(./code_bg.png);
+    background-repeat: repeat;
+    border: 1px solid black;
+    float: left;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    width:100%;
+    font-size: 0.8em;
+    font-family:Helvetica;
+}
+
+#examples .code p.directive{
+    margin-left: 2em;
+    margin-top:0.1em;
+    margin-bottom:0.1em;
+    color: green;
+}
+
+#examples .code p.label{
+    margin-left: 2em;
+    margin-top:0.2em;
+    margin-bottom:0.2em;
+    color: red;
+}
+
+#examples .code p.instruction{
+    margin:0;
+    margin-left: 3em;
+    color: black;
+    padding:0;
+}
+
+#examples .code span.comment{
+    display: inline;
+    margin-left: 2em;
+}
+
+#examples .code table tr td p{
+    margin:0;
+    padding:0;
+}
+
+#examples .code table {
+    width:100%;
+}
+
+#examples .code table .left{
+    width: 50%;
+}
+
+#examples .important{
+    text-align: center;
+    font-weight:bold;
+    color: red;
+    font-size: 1.2em;
+}
+
+
+</style>
+</head>
+<body style="min-width:600px" id="examples">
+<div class="paragraph">
+<h1 class="center clear">Handbook for TomOS</h1>
+<p>This handbook explains how to use TomOS to create programs.</p>
+<p> TomOS is a simple operating system. It was forked from <a href="http://mikeos.berlios.de/">MikeOS</a> created by Mike Saunders and developers. The full list of
+    developers who are involved in MikeOS can be found in the file  CREDITS.TXT, in the main directory of TomOS.</p> 
+    <p>TomOS is differs from <a href="http://mikeos.berlios.de/">MikeOS</a> in the following ways:</p>
+    <ul>
+    <li><p>In TomOS all system calls are handled by the software interupt 47h. This change resulted in an incompatibility between the systems. <a href="http://mikeos.berlios.de/">MikeOS</a> uses the AX register to pass some  arguments to system calls, while TomOS 
+    uses the AX register to indicate the number of system calls. This incompatibility will be resolved in the next version of TomOS. To find out how
+    to use system calls in TomOS see <a href="#hw1">Hello world!!</a></p></li>
+    <li><p>TomOS incorporates mouse support. <a href="http://mikeos.berlios.de/">MikeOS</a> featured mouse support at one point  but was decided to remove it.
+    To find out how to use a mouse in TomOS see <a href="#mouse">Mouse in TomOS</a>.</p></li>
+     
+    <li><p>TomOS introduced a simple memory manager. It uses the last 8KB of segment 2000h. 
+           There are plans to  extend it to 64KB. To find out how to use the memory manager in TomOS see <a href="#memory">Memory managment</a>.</p></li>
+    </ul>
+    <p>To find out more about system calls in TomOS  click <a href="index.html">here</a>.</p>
+    <p> The source code of TomOS is also provides information.</p>
+</div>
+<div id="basics"class="paragraph clear">
+<h2 class="clear">Basics</h2>
+<p>To compile programs for TomOS few steps should be followed:
+      <ul>
+	      <li>Every program should start in a certain way, explained later in this chapter. The program must finish with the instruction '<b>ret</b>' to return to the system.</li>
+	      <li>The return value must be in the AX register.</li>
+      <li>Source code of program should be placed in a direcotory <i>programs</i>.</li>
+      </ul>
+      <p>Programs written for TomOS should begin in this way:</p>
+<div class="code">
+	<table class>
+	<tr><td><p class="directive">CPU 386</p></td><td><p>;<span class="comment"> &lt 1 &gt</span></p></td></tr>
+	<tr><td><p class="directive">BITS 16</p></td><td><p>;<span class="comment"> &lt 2 &gt</span></p></td></tr>
+	<tr><td><p class="directive">ORG 100h</p></td><td><p>;<span class="comment"> &lt 3 &gt</span></p></td></tr>
+		<tr><td><p class="directive">%include '../include/tomos.inc'</p></td><td><p>;<span class="comment"> &lt 4 &gt</span></p></td></tr>
+		<tr><td class="left"><p class="label">start:</p></td><td class="right"><p>;<span class="comment"> &lt 5 &gt</span></p></td></tr>
+	</table>
+</div>
+This is a typical template for a TomOS application. 
+<p>Line <1> tells the 'nasm' compilator to use only instructions available for intel 386.</p>
+<p>Line <2> tells the 'nasm' compilator to genarate 16 bit code (TomOS is 16 bit OS).</p>
+Line <3> is manadtory for .com files. Note that this directive works differently here than within TASM or MASM (see documentation on <a href="http://www.nasm.us/">nasm</a> website).</p>
+<p>Line <4> is not mandatory. It includes a <span class="filename">tomos.inc</span> file which contains macros.</p>
+<p>Line <5> declare a label that indicates the start of a the program.</p>
+</div>
+
+<div id="hw1" class="paragraph clear">
+<h3 class="clear">Hello World!!</h3>
+<p>This is the 'Hello World' program illustrating the proper use of system calls in TomOS. An explanation for the first four lines is included in the <a href="#basics">basics</a> section.
+<div class="code">
+<table class>
+	<tr><td><p class="directive">CPU 386</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">BITS 16</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">ORG 100h</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">%include '../include/tomos.inc'</p></td><td><p>;</p></td></tr>
+	<tr><td class="left"><p class="label">start:</p></td><td class="right">;</td></tr>
+	<tr><td><p class="instruction">mov si , .hello_world</p></td><td><p>;<span class="comment">&lt 1 &gt</span></p></td></tr>
+
+    <tr><td><p class="instruction">syscall <a class="code_address" href="../syscalls.asm.html#os_print_string">os_print_string</a></p></td><td><p>;<span class="comment">&lt 2 &gt</span></p></td></tr>
+    <tr><td><p class="instruction">ret</p></td><td><p>;<span class="comment">&lt 3 &gt</span></p></td></td>
+    <tr><td></td><td><p>;</p></td></td>
+    <tr><td><p class="instruction">.hello_world db 'Hello World!',13,10,0</p></td><td><p>;<span class="comment">&lt 4 &gt</span></p></td></td>
+</table>
+</div>
+<p>Line <1> loads the address of the string to the register SI. The string will then apper on the screen.</p>
+<p>Line <2> calls the <a href="../syscalls.asm.html#os_print_string">os_print_string</a> system call using the syscall macro. The syscall macro is defined in the <span class="filename">include/syscalls.inc</span> file.
+This file is included automatically during compilation.</p> 
+<p><b>NOTE:</b> To make TomOS compatable with MikeOS the 'call' macro was included. When used with a system call 'call' is a macro, wheras in all other cases, 'call' is a processor instruction. In TomOS the 'syscall' and the 'call' macros are interchangeable. Programs written for MikeOS do not work on TomOS. This issue will be resolved in TomOS-0.4.0</p>
+   <p class="important">To call a system call use 'syscall' followed by the name of the system call.</p>
+   <p class="important">Programs written for TomOS  do not have to include the <span class="filename">'include/syscalls.inc'</span> file.</p>
+<p>Line <3> return to the system.</p>
+<p>Line <4> declares the 'hello world' string.</p>
+<p class="important">TomOS is not compatible with MikeOS and vice versa.</p>
+</div>
+
+<div id="hw2"class="paragraph clear">
+<h3 class="clear">Hello World!! with macro</h3>
+<div class="code">
+<table class>
+	<tr><td><p class="directive">CPU 386</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">BITS 16</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">ORG 100h</p></td><td><p>;</p></td></tr>
+		<tr><td><p class="directive">%include '../include/tomos.inc'</p></td><td><p>;</p></td></tr>
+		<tr><td class="left"><p class="label">start:</p></td><td class="right">;</td></tr>
+		<tr><td><p class="instruction">m_os_print_string_nl "Hello World!"</p></td><td><p>;<span class="comment">&lt 1 &gt</span></p></td></tr>
+		<tr><td><p class="instruction">ret</p></td><td><p>;<span class="comment">&lt 2 &gt</span></p></td></td>
+	</table>
+</div>
+<p>A more convenient way to print strings on the screen is to use one of the macros defined in <span class="filename">include/tomos.inc</span>.</p>
+<p> The example above is the 'Hello World' program written using a macro.</p>
+<p>Line <1> invokes the macro 'm_os_print_string_nl' which prints a string on the screen and moves the cursor to the next line</p>
+<p>Line <2> returns to the system.</p>
+<p class="important">Every macro starts with 'm_'</p>
+</div>
+
+<div id="hw3"class="paragraph clear">
+<h3 class="clear">Hello World!! with OSINT</h3>
+<div class="code">
+<table class>
+	<tr><td><p class="directive">CPU 386</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">BITS 16</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">ORG 100h</p></td><td><p>;</p></td></tr>
+		<tr><td><p class="directive">%include '../include/tomos.inc'</p></td><td><p>;</p></td></tr>
+		<tr><td class="left"><p class="label">start:</p></td><td class="right">;</td></tr>
+		<tr><td><p class="instruction">mov si , .hello_world</p></td><td><p>;<span class="comment">&lt 1 &gt</span></p></td></tr>
+        <tr><td><p class="instruction">mov ax , ID_os_print_string</p></td><td><p>;<span class="comment">&lt 2 &gt</span></p></td></tr>
+		<tr><td><p class="instruction">int OSINT</p></td><td><p>;<span class="comment">&lt 2 &gt OSINT = 47h</span></p></td></tr>
+		<tr><td><p class="instruction">ret</p></td><td><p>;<span class="comment">&lt 3 &gt</span></p></td></td>
+		<tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">.hello_world db 'Hello World!',13,10,0</p></td><td><p>;<span class="comment">&lt 4 &gt</span></p></td></td>
+	</table>
+</div>
+<p>This is a version of the 'Hello World!' program where the system call is invoked explicitly</p>
+   <p>This example shows how TomOS invokes its system calls. Every system call has an ID defined in the file
+   <span class="filename">include/syscalls.inc</span>. The ID is created in a following way: the is  ID_xxxx where xxxx is the name of a system call. 
+   The ID is passed to the interupt OSINT (in TomOS is 47h) by the AX register.</p>
+   <p class="important">The program should not invoke a system call using an explicit call (int OSINT). Instead, a 'syscall' or 'call' macro should be used. 
+   <p>The full list of system calls can be found  <a href="../sections.html">here</a>.</p> 
+</div>
+
+<div id="mouse" class="paragraph clear">
+<h2 class="clear">Mouse in TomOS</h2>
+<p>Mouse support is a new feature of TomOS. The example below explains how to use a mouse within TomOS.</p>
+<p>The full list of mouse system calls can be found <a href="../os_mouse_syscalls.asm.html">here</a></p>
+</div>
+<div id="mouse" class="paragraph clear">
+<h3 class="clear">Mouse Initialisation</h3>
+<ul>
+	<li>
+	<p>To enable a mouse in TomOS use <a href="../os_mouse_syscalls.asm.html#os_mouse_enable">os_mouse_enable</a> system call.</li>
+	<li><p>To disable a mouse use the  <a href="../os_mouse_syscalls.asm.html#os_mouse_disable">os_mouse_disable</a> system call.
+	Although it is not mandatory to disable the mouse before exiting a program, it is advisiable to do so.
+	</li>
+</ul>
+	<p>Once the mouse is enabled, the cursor is hidden. To show it on the screen use the <a href="../os_mouse_syscalls.asm.html#os_mouse_show">os_mouse_show</a> system call.
+	</p>
+<div class="code">
+<table class>
+	<tr><td><p class="directive">CPU 386</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">BITS 16</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">ORG 100h</p></td><td><p>;</p></td></tr>
+		<tr><td><p class="directive">%include '../include/tomos.inc'</p></td><td><p>;</p></td></tr>
+		<tr><td class="left"><p class="label">start:</p></td><td class="right">;</td></tr>
+		<tr><td><p class="instruction">syscall <a class="code_address" href="../os_mouse_syscalls.asm.html#os_mouse_enable">os_mouse_enable</a></p></td><td><p>;<span class="comment">&lt 1 &gt</span></p></td></tr>
+        <tr><td><p class="instruction">cmp ax , 0FFFFh</p></td><td><p>;<span class="comment">&lt 2 &gt</span></p></td></tr>
+		<tr><td><p class="instruction">jz .exit</p></td><td><p>;<span class="comment">&lt 3 &gt</span></p></td></tr>
+		<tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">syscall <a class="code_address" href="../os_mouse_syscalls.asm.html#os_mouse_show">os_mouse_show</a></p></td><td><p>;<span class="comment">&lt 4 &gt</span></p></td></td>
+		<tr><td><p class="instruction">syscall <a class="code_address" href="../syscalls.asm.html#os_kbd_wait_for_key">os_kbd_wait_for_key</a></p></td><td><p>;<span class="comment">&lt 5 &gt</span></p></td></td>
+		<tr><td><p class="instruction">syscall <a class="code_address" href="../os_mouse_syscalls.asm.html#os_mouse_disable">os_mouse_disable</a></p></td><td><p>;<span class="comment">&lt 6 &gt</span></p></td></tr>
+	    <tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">.exit:</p></td><td><p>;<span class="comment">&lt 7 &gt</span></p></td></td>
+        <tr><td><p class="instruction">ret</p></td><td><p>;<span class="comment">&lt 8 &gt</span></p></td></td>
+	</table>
+</div>
+<p>Line <1> enables the mouse.  At first the cursor is hidden.
+<p>Line <2> checks whether the mouse was successfully enabled. (FFFFh indicates an error).</p>
+<p>Line <3> if initialisation failed, the program is exited. (jump to the .exit label)</p>
+<p>Line <4> shows the cursor on the screen.The mouse cursor appears in the center of the screen.</p>
+<p>Line <5> waits for a key to be pressed. The mouse can be moved on the screen now.</p>
+<p>Line <6> when a key is pressed  the <a href="../os_mouse_syscalls.asm.html#os_mouse_disable">os_mouse_disable</a> system call  hides the cursor and disables the mouse.</p>
+<p>Line <7> declares the .exit label.</p>
+<p>Line <8> returns to the system</p>
+</div>
+
+<div id="mouse_events" class="paragraph clear">
+<h3 class="clear">Mouse Events</h3>
+<p>Mouse events are send to a program by the TomOS mouse driver. This chapter explains how to recieve those
+   events using the mouse events subroutine.</p>
+<p> To set the mouse events subroutine the <a href="../os_mouse_syscalls.asm.html">os_mouse_set_user_subroutine</a> must be called. This systam call expects
+    two arguments:
+    <ul>
+    <li>The address of the mouse events subroutine - passed through the ES:DX registers.</li>
+    <li>The filter flag is used by the driver to filter events passed to the mouse events subroutine - passed by the CX register.</li>
+    </ul>
+</p>
+<p>The example below shows how to setup the  mouse events subroutine.</p> 
+<div class="code">
+<table class>
+	<tr><td><p class="directive">CPU 386</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">BITS 16</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">ORG 100h</p></td><td><p>;</p></td></tr>
+		<tr><td><p class="directive">%include '../include/tomos.inc'</p></td><td><p>;</p></td></tr>
+		<tr><td class="left"><p class="label">start:</p></td><td class="right">;</td></tr>
+		<tr><td><p class="instruction">syscall <a class="code_address" href="../os_mouse_syscalls.asm.html#os_mouse_enable">os_mouse_enable</a></p></td><td><p>;</p></td></tr>
+        <tr><td><p class="instruction">cmp ax , 0FFFFh</p></td><td><p>;</p></td></tr>
+		<tr><td><p class="instruction">jz .exit</p></td><td><p>;</p></td></tr>
+		<tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">mov dx , .mouse_event_handler</p></td><td><p>;<span class="comment">&lt 1 &gt</span></p></td></td>
+        <tr><td><p class="instruction">mov cx , 1011b</p></td><td><p>;<span class="comment">&lt 2 &gt</span></p></td></td>
+        <tr><td><p class="instruction">call <a class="code_address" href="../os_mouse_syscalls.asm.html#os_mouse_set_user_subroutine">os_mouse_set_user_subroutine</a></p></td><td><p>;<span class="comment">&lt 3 &gt</span></p></td></td>
+        <tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">syscall <a class="code_address" href="../os_mouse_syscalls.asm.html#os_mouse_show">os_mouse_show</a></p></td><td><p>;</p></td></td>
+		<tr><td><p class="instruction">syscall <a class="code_address" href="../syscalls.asm.html#os_wait_for_key">os_wait_for_key</a></p></td><td><p>;</p></td></td>
+		<tr><td><p class="instruction">syscall <a class="code_address" href="../os_mouse_syscalls.asm.html#os_mouse_disable">os_mouse_disable</a></p></td><td><p>;</p></td></tr>
+	    <tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="label">.exit:</p></td><td><p>;</p></td></td>
+    	<tr><td><p class="instruction">ret</p></td><td><p>;</p></td></td>
+    	<tr><td></td><td><p>;</p></td></td>
+    	<tr><td><p class="label">.mouse_event_handler:</p></td><td><p>;<span class="comment">&lt 4 &gt</span></p></td></td>
+    	<tr><td><p class="instruction">; here is code responsible for handling mouse events</p></td><td><p>;</p></td></td
+		<tr><td><p class="instruction">; for more details look into the <span class="filename">programs/mouse2.asm</span> file.</p></td><td><p>;</p></td></td
+    	<tr><td><p class="instruction">retf</p></td><td><p>;<span class="comment">&lt 5 &gt</span></p></td></td>
+	</table>
+</div>
+<p>Line <1> loads the mouse events subroutine address to the DX register. In the case above the subroutine has been called <i>.mouse_event_handler</i>.</p>
+<p>Line <2> loads the filter flag to the  CX register.</p>
+<p>Line <3> calls the <a href="../os_mouse_syscalls.asm.html">os_mouse_set_user_subroutine</a> to set the mouse event subroutine.</p>
+<p>Line <4> is the entry point to the mouse events subroutine.</p>
+<p>Line <5> returns to the system.</p>
+</div>
+
+<div id="memory" class="paragraph clear">
+<h2 class="clear">Memory in TomOS</h2>
+<p>TomOS introduces a simple memory manager. It allows a program to <a href="../os_mm.asm.html/#os_mm_alloc">allocate memory</a>
+, <a href="../os_mm.asm.html/#os_mm_realloc">reallocate memory</a>, etc.</p>
+<p> The full list of system calls can be found here <a href="../os_mm.asm.html">here</a>.</p> 
+<div class="code">
+<table class>
+	<tr><td><p class="directive">CPU 386</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">BITS 16</p></td><td><p>;</p></td></tr>
+	<tr><td><p class="directive">ORG 100h</p></td><td><p>;</p></td></tr>
+		<tr><td><p class="directive">%include '../include/tomos.inc'</p></td><td><p>;</p></td></tr>
+		<tr><td class="left"><p class="label">start:</p></td><td class="right">;</td></tr>
+		<tr><td><p class="instruction">mov dx , 128</p></td><td><p>;<span class="comment">&lt 1 &gt</span></p></td></tr>
+        <tr><td><p class="instruction">syscall <a class="code_address" href="../os_mm.asm.html#os_mm_alloc">os_mm_alloc</a></p></td><td><p>;<span class="comment">&lt 2 &gt</span></p></td></tr>
+		<tr><td><p class="instruction">test ax , ax</p></td><td><p>;<span class="comment">&lt 3 &gt</span></p></td></td>
+        <tr><td><p class="instruction">jz .exit</p></td><td><p>;<span class="comment">&lt 4 &gt</span></p></td></tr>
+		<tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">SAVE_FAR_PTR .mem1</p></td><td><p>;<span class="comment">&lt 5 &gt</span></p></td></td>
+		<tr><td><p class="instruction">; in .mem1 is an address of allocated memory we can use</p></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">LOAD_FAR_PTR .mem1</p></td><td><p>;<span class="comment">&lt 6 &gt</span></p></td></td>
+        <tr><td><p class="instruction">syscall <a class="code_address" href="../os_mm.html#os_mm_free">os_mm_free</a></p></td><td><p>;<span class="comment">&lt 7 &gt</span></p></td></td>
+	    <tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">.exit:</p></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">ret</p></td><td><p>;</p></td></td>
+        <tr><td></td><td><p>;</p></td></td>
+        <tr><td><p class="instruction">FAR_PTR .mem1</p></td><td><p>;<span class="comment">&lt 8 &gt</span></p></td></td>
+	</table>
+</div>
+<p>Line <1> loads the size of memory block needed in bytes to the DX register. In this case 128 bytes.</p>
+<p>Line <2> calls <a href="../os_mm.asm.html#os_mm_alloc">os_mm_alloc</a> to allocate the memory</p>
+<p>Line <3> checks whether the allocation was succesfull.</p>
+<p>Line <4> if failed jump to the .exit label.</p>
+<p>Line <5> SAVE_FAR_PTR is a macro defined in the <span class="filename">include/tomos.inc</span> file. The macro saves the ES and DI registers in the memory indicated by the label passed 
+            as an argument to the macro. The label must be declared by another macro FAR_PTR see line &lt&#56&gt</p> 
+<p>Line <6> loads the ES and DI registers with the value from the memory. LOAD_FAR_PTR is a macro defined in the <span class="filename">include/tomos.inc</span> file.
+<p>Line <7> calls the <a href="../os_mm.asm.html#os_mm_free">os_mm_free</a> system call to release the allocated memory. The input argument is the address
+   of an allocated memory in the ES and DI registers.</p>
+<p>Line <8> declares the variable used to store the allocated memory address</p>
+</div>
+</body>
+</html>

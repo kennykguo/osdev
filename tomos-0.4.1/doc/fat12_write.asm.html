@@ -1,0 +1,58 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="fat12_write.asm">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class="select"><a href="files.html">Files</a></li>
+<li class=""><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both">
+<table>
+<tr><td>
+		<h2 class="header">fat12_write.asm</h2>
+</td></tr>
+<tr><td>
+<p class="description"></p>
+</td></tr>
+</table>
+<table class="section_table">
+<tr><td celspan="2"><h3>Function list</h3></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_file_write">os_file_write</a></p></td><td>Save (max 64K) file to disk</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_file_get_free_FAT_entry">_os_file_get_free_FAT_entry</a></p></td><td>Get a pointer of a free entry in the FAT table</td></tr>
+</table>
+		<h3>Descriptions</h3>
+		<h4 id="os_file_write" class="title">os_file_write</h4>
+		<p class="description">Save (max 64K) file to disk</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - filename, </div>
+			<div class="param">BX - data location, </div>
+			<div class="param">CX - bytes to write</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Carry clear if OK, set if failure</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="_os_file_get_free_FAT_entry" class="title">_os_file_get_free_FAT_entry</h4>
+		<p class="description">get a pointer of a free entry in the FAT table</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - pointer to the FAT free entry.</div>
+		</div>
+		<div class="section">Section : FAT12</div>
+</div>
+	</body>
+</html>

@@ -1,0 +1,93 @@
+This will be a fully fledged kids level project as an ADC, (Analogue to Digital
+Converter), for MikeOS. It can be built by anyone from ages around 10 to old(e).
+
+At the moment it is a feeler/feeder upload and conforms to my kids level projects
+for the classic AMIGA, WinUAE and MS-DOS - see below...
+
+When finalised it will contain drawings, strpiboard layout, construction info,
+full parts list, circuit, source code, photos, and how it works, using the parallel
+port in SPP, (standard), mode.
+
+For any info before final release you can contact the author on:-
+
+      wisecracker@tesco.net
+
+And specify by using:-
+
+      ADC project for MikeOS.
+
+In the subject line of the email.
+
+This is my criteria for my AMIGA projects...
+
+Note that it is for the AMIGA but you will see where I am coming from... :)
+
+
+
+                   The Criteria for the TestGear? Projects.
+                   ----------------------------------------
+
+  In 1998 my (then 7 year old) daughter's friend's brother was (is)
+  interested in tinkering with simple electrical and electronic projects.
+  When I asked him if he had any basic Test Gear to check and calibrate his
+  projects he replied "No none at all, but I have got my own ~Commodore
+  AMIGA~". On inspection I found he had an old A500 with 1MB of memory,
+  a Television set, an extra floppy drive and it was MISSING the mouse.
+  I then asked him if he would like his AMIGA to become his Test Gear, his
+  face showed much surprise and he said "Yes Please", he was at that time
+  8 years old.
+
+----------------------------------------------------------------------------
+
+  This set the criteria for all of the projects as shown below:-
+  --------------------------------------------------------------
+
+  1) The projects MUST run on a standard A500 WITH an extra floppy drive.
+     Some projects may NOT be calibrated for this machine however as all
+     the developement work was/is done on an AMIGA A1200.
+  2) The projects MUST be Operating System friendly.
+  3) A 0.5MB memory expansion for the A500 is optional.
+  4) The initial projects MUST NOT require a mouse to work, this is
+     optional. The keyboard IS the required minimum.
+  5) The OCS graphics modes MUST be the required minimum display modes.
+  6) A Television Set MUST be the required minimum display medium.
+  7) Workbench 1.3x MUST be the required minimum Operating System.
+  8) The projects MUST work on both NTSC and PAL. This is so that everyone
+     in the world can use the software without modification.
+  9) The projects MUST be simple enough for a young child to build in a
+     VERY SHORT period of time, possibly under supervision. This is so as
+     to be able to keep the attention span of that young child.
+ 10) All of the required components MUST be available to the general public
+     from any or a known source.
+ 11) The projects MUST be VERY cheap to build in relation to their
+     commercial/professional cousins.
+ 12) All external power supplies required for any of the projects MUST be
+     batteries. A young child should NOT have access to MAINS voltage
+     facilities or power sockets.
+ 13) All Calibration Equipment MUST be batteries or cells also.
+     A young child has NOT got access to Professional Calibration Equipment
+     so therefore he/she has to start from somewhere.
+ 14) The projects MUST NOT require special printed circuit boards to be made.
+ 15) The projects MUST NOT require any special tools, the standard tools
+     should always be sufficient.
+ 16) IF a special tool is required then a supplier MUST be available to
+     purchase that tool.
+ 17) As a multimeter/multitester is virtually impossible on any computer
+     this MUST be a purchased item.
+ 18) If MAINS IS required to power up a unit to be tested, then a MAINS
+     ISOLATING transformer WILL be required and MUST be used. This MUST be
+     under the supervision of an adult.
+ 19) Any books required SHOULD be available from your local library.
+ 20) NO special knowledge of electronics is needed or required to build
+     any of the projects.
+ 21) Read the ~Warning~ file for SAFETY reasons.
+
+============================================================================
+
+Enjoy...
+
+73...
+
+Bazza. G0LCU...
+
+Team AMIGA...

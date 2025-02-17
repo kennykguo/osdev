@@ -1,0 +1,42 @@
+===================================================================
+TomOS -- Open source 16-bit operating system for x86 PCs
+Copyright (C) 2006 - 2008 MikeOS Developers -- see doc/LICENSE.TXT
+Copyright (C) 2008 - 2009 TomOS Developers -- see doc/LICENSE.TXT
+===================================================================
+
+--- TomOS folks
+
+PROJECT ADMIN
+
+ * Tomasz Gorol -- gavian@tlen.pl
+
+
+PROGRAMMING
+
+ * Tomasz Gorol -- programming
+ * see MikeOS folks
+
+-- MikeOS folks
+
+PROJECT ADMIN
+
+ * Mike Saunders
+
+PROGRAMMING
+
+ * Mike Saunders -- main code and Handbook
+ * E Dehling -- original FAT12 filesystem code
+ * Ian Seyler -- serial port and date routines, Windows building docs
+ * Michael van Tellingen -- Mac OS X build script
+ * Peter Nemeth -- various DOS routines, bugfixes
+ * Takayoshi Sasano -- C API, OpenBSD build script
+ * Tomasz Gorol -- mouse driver and documentation
+ * Walt Nagel -- system calls, code fixes and documentation updates
+ * Yutaka Saiko -- machine code monitor
+
+Thanks also to Bob Moss, Michael Crees, Scott Wren and Troy Martin
+for testing.
+
+
+===================================================================
+

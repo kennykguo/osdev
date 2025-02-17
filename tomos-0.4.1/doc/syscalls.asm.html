@@ -1,0 +1,925 @@
+<!DOCTYPE html
+	PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+	"http://www.w3.org/TR/html14/loose.dtd">
+<html>
+<head>
+<style type="text/css">
+<!-- @import url(style.css); --!>
+</style>
+</head>
+	<body style="width:900px;" id="syscalls.asm">
+<ul class="mainmenu">
+<li class=""><a href="index.html">Main</a></li>
+<li class="select"><a href="files.html">Files</a></li>
+<li class=""><a href="sections.html">Sections</a></li>
+<li class=""><a href="all.html">All</a></li>
+</ul>
+<div style="clear:both">
+<table>
+<tr><td>
+		<h2 class="header">syscalls.asm</h2>
+</td></tr>
+<tr><td>
+<p class="description">File contains system calls derived from MikeOS-2.0.0</p>
+</td></tr>
+</table>
+<table class="section_table">
+<tr><td celspan="2"><h3>Function list</h3></td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_char_uppercase">os_char_uppercase</a></p></td><td>Change a character to a capital</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_char_lowwercase">os_char_lowwercase</a></p></td><td>Change a character to a small letter</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_string">os_print_string</a></p></td><td>Displays text</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_cursor_move">os_cursor_move</a></p></td><td>Moves cursor in text mode</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_cursor_get_pos">os_cursor_get_pos</a></p></td><td>Return position of text cursor</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_cursor_show">os_cursor_show</a></p></td><td>Turns on cursor in text mode</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_cursor_hide">os_cursor_hide</a></p></td><td>Turns off cursor in text mode</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_draw_block">os_draw_block</a></p></td><td>Render block of specified colour</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_file_selector">os_file_selector</a></p></td><td>Show a file selection dialog</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_list_dialog">os_list_dialog</a></p></td><td>Show a dialog with a list of options</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_draw_background">os_draw_background</a></p></td><td>Clear screen with white top and bottom bars,containing...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_clear_screen">os_clear_screen</a></p></td><td>Clears the screen to background</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_bcd_to_int">os_bcd_to_int</a></p></td><td>Converts binary coded decimal number to an integer</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_serial_send">os_serial_send</a></p></td><td>Send a byte via the serial port</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_serial_get">os_serial_get</a></p></td><td>Get a byte from the serial port</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_set_time_fmt">os_set_time_fmt</a></p></td><td>Set time reporting format (eg '10:25 AM' or '2300 hours')</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_get_time_string">os_get_time_string</a></p></td><td>Get current time in a string (eg '10:25')</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_date_set_fmt">os_date_set_fmt</a></p></td><td>Set date reporting format (M/D/Y, D/M/Y or Y/M/D - 0, 1, 2)</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_date_get_string">os_date_get_string</a></p></td><td>Get current date in a string (eg '12/31/2007')</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_horiz_line">os_print_horiz_line</a></p></td><td>Draw a horizontal line on the screen</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_char">os_print_char</a></p></td><td>Reset cursor to start of next line</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_newline">os_print_newline</a></p></td><td>Reset cursor to start of next line</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_kbd_flush_buffer">os_kbd_flush_buffer</a></p></td><td>Clear the keyboard buffer</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_kbd_check_buffer">os_kbd_check_buffer</a></p></td><td>Check if any character in the keyboard buffer</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_kbd_get_char">os_kbd_get_char</a></p></td><td>Get charcter from the keyboard buffer. If the buffer is...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_kbd_wait_for_key">os_kbd_wait_for_key</a></p></td><td>Waits for keypress and returns key</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_kbd_check_for_key">os_kbd_check_for_key</a></p></td><td>Scans keyboard for input, but doesn't wait</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_dump_registers">os_dump_registers</a></p></td><td>Displays register contents in hex on the screen</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_int_to_string">os_int_to_string</a></p></td><td>Convert value in DX to string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_speaker_tone">os_speaker_tone</a></p></td><td>Generate PC speaker tone (call _os_speaker_off after)</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_speaker_off">os_speaker_off</a></p></td><td>Turn off PC speaker</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_input_dialog">os_input_dialog</a></p></td><td>Get text string from user via a dialog box</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_dialog_box">os_dialog_box</a></p></td><td>Print dialog box in middle of screen, with button(s)</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_input_string">os_input_string</a></p></td><td>Take string from keyboard entry</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_length">os_string_length</a></p></td><td>Return length of a string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_not_find_char">os_string_not_find_char</a></p></td><td>Find location of first non character in a string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_find_char">os_string_find_char</a></p></td><td>Find location of character in a string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_uppercase">os_string_uppercase</a></p></td><td>Convert zero-terminated string to upper case</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_n_uppercase">os_string_n_uppercase</a></p></td><td>Convert n first characters of zero-terminated string to...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_lowercase">os_string_lowercase</a></p></td><td>Convert zero-terminated string to lower case</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_copy">os_string_copy</a></p></td><td>Copy one string into another</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_truncate">os_string_truncate</a></p></td><td>Chop string down to specified number of characters</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_join">os_string_join</a></p></td><td>Join two strings into a third string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_chomp">os_string_chomp</a></p></td><td>Strip leading and trailing spaces from a string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_strip">os_string_strip</a></p></td><td>Removes specified character from a string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_compare">os_string_compare</a></p></td><td>See if two strings match</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_n_compare">os_string_n_compare</a></p></td><td>See if n characters of two strings match.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_string_strincmp">os_string_strincmp</a></p></td><td>See if two strings match up to set number of chars</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_space">os_print_space</a></p></td><td>Print a space to the screen</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_dump_string">os_dump_string</a></p></td><td>Dump string as hex bytes and printable characters</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_digit">os_print_digit</a></p></td><td>Displays contents of AX as a single digit. Works up to base...</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_1hex">os_print_1hex</a></p></td><td>Displays low nibble of DL in hex format</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_2hex">os_print_2hex</a></p></td><td>Displays DL in hex format</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_print_4hex">os_print_4hex</a></p></td><td>Displays DX in hex format</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_long_int_to_string">os_long_int_to_string</a></p></td><td>Convert value in DX:CX to string</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_long_int_negate">os_long_int_negate</a></p></td><td>Multiply value in DX:BX by -1</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_pause">os_pause</a></p></td><td>Delay execution for specified microseconds</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_get_api_version">os_get_api_version</a></p></td><td>Return current version of TomOS API</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_get_int_handler">os_get_int_handler</a></p></td><td>Get the segment:offset of an interrupt handler</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_modify_int_handler">os_modify_int_handler</a></p></td><td>Change location of interrupt handler</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_fatal_error">os_fatal_error</a></p></td><td>Display error message, take keypress, and restart OS</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_get_file_list">os_get_file_list</a></p></td><td>Generate comma-separated string of files on floppy</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_filename_convert">os_filename_convert</a></p></td><td>Change 'TEST.BIN' into 'TEST    BIN' as per FAT12</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_load_file">os_load_file</a></p></td><td>Load file into bottom-half of TomOS RAM</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_execute_program">os_execute_program</a></p></td><td>Run code loaded at 100h in RAM (current CS)</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_memory_set">os_memory_set</a></p></td><td>Set block of memory.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_memory_copy">os_memory_copy</a></p></td><td>Copy block of bytes.</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#os_int_reboot">os_int_reboot</a></p></td><td>Reboot machine via keyboard controller</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_int_restet_floppy">_os_int_restet_floppy</a></p></td><td>Reset floppy drive</td></tr>
+<tr><td class="name"><p class="funclink"><a href="#_os_int_l2hts">_os_int_l2hts</a></p></td><td>Calculate head, track and sector settings for int...</td></tr>
+</table>
+		<h3>Descriptions</h3>
+		<h4 id="os_char_uppercase" class="title">os_char_uppercase</h4>
+		<p class="description">change a character to a capital</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - character to change</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AL - changed </div>
+		</div>
+		<div class="section">Section : char</div>
+		<h4 id="os_char_lowwercase" class="title">os_char_lowwercase</h4>
+		<p class="description">change a character to a small letter</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - character to change</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AL - changed </div>
+		</div>
+		<div class="section">Section : char</div>
+		<h4 id="os_print_string" class="title">os_print_string</h4>
+		<p class="description">Displays text</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - message location (zero-terminated string)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_cursor_move" class="title">os_cursor_move</h4>
+		<p class="description">Moves cursor in text mode</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DH - row</div>
+			<div class="param">DL - column</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : cursor</div>
+		<h4 id="os_cursor_get_pos" class="title">os_cursor_get_pos</h4>
+		<p class="description">Return position of text cursor</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">DH - row</div>
+			<div class="param">DL - column</div>
+		</div>
+		<div class="section">Section : cursor</div>
+		<h4 id="os_cursor_show" class="title">os_cursor_show</h4>
+		<p class="description">Turns on cursor in text mode</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : cursor</div>
+		<h4 id="os_cursor_hide" class="title">os_cursor_hide</h4>
+		<p class="description">Turns off cursor in text mode</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : cursor</div>
+		<h4 id="os_draw_block" class="title">os_draw_block</h4>
+		<p class="description">Render block of specified colour</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BL - colour</div>
+			<div class="param">DL - start X pos</div>
+			<div class="param">DH - start Y pos</div>
+			<div class="param">SI - width</div>
+			<div class="param">DI - finish Y pos</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : drawing</div>
+		<h4 id="os_file_selector" class="title">os_file_selector</h4>
+		<p class="description">Show a file selection dialog</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - location of filename string (or 0 if Esc pressed)</div>
+		</div>
+		<div class="section">Section : dialog</div>
+		<h4 id="os_list_dialog" class="title">os_list_dialog</h4>
+		<p class="description">Show a dialog with a list of options</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX - comma-separated list of strings to show (zero-terminated),</div>
+			<div class="param">BX - first help string, CX = second help string</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - number, starting from 1, of entry selected or carry set if Esc pressed</div>
+		</div>
+		<div class="section">Section : dialog</div>
+		<h4 id="os_draw_background" class="title">os_draw_background</h4>
+		<p class="description">Clear screen with white top and bottom bars,containing text, and a coloured middle section.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - top string locations</div>
+			<div class="param">BX - bottom string locations</div>
+			<div class="param">CX - colour</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : drawing</div>
+		<h4 id="os_clear_screen" class="title">os_clear_screen</h4>
+		<p class="description">Clears the screen to background</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : screen</div>
+		<h4 id="os_bcd_to_int" class="title">os_bcd_to_int</h4>
+		<p class="description">Converts binary coded decimal number to an integer</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - BCD number</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - integer value</div>
+		</div>
+		<div class="section">Section : integer</div>
+		<h4 id="os_serial_send" class="title">os_serial_send</h4>
+		<p class="description">Send a byte via the serial port</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - byte to send via serial</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AH - Bit 7 clear on success</div>
+		</div>
+		<div class="section">Section : serial port</div>
+		<h4 id="os_serial_get" class="title">os_serial_get</h4>
+		<p class="description">Get a byte from the serial port</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AL - byte that was received</div>
+			<div class="param">AH - Bit 7 clear on success</div>
+		</div>
+		<div class="section">Section : serial port</div>
+		<h4 id="os_set_time_fmt" class="title">os_set_time_fmt</h4>
+		<p class="description">Set time reporting format (eg '10:25 AM' or '2300 hours')</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - format flag, 0 - 12-hr format</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : time</div>
+		<h4 id="os_get_time_string" class="title">os_get_time_string</h4>
+		<p class="description">Get current time in a string (eg '10:25')</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">BX - string location</div>
+		</div>
+		<div class="section">Section : time</div>
+		<h4 id="os_date_set_fmt" class="title">os_date_set_fmt</h4>
+		<p class="description">Set date reporting format (M/D/Y, D/M/Y or Y/M/D - 0, 1, 2)</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - format flag, 0-2</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param"> If DX bit 7 = 1 = use name for months</div>
+<div class="param"> If DX bit 7 = 0, high byte = separator character</div>
+		</div>
+		<div class="section">Section : date</div>
+		<h4 id="os_date_get_string" class="title">os_date_get_string</h4>
+		<p class="description">Get current date in a string (eg '12/31/2007')</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">BX - string location</div>
+		</div>
+		<div class="section">Section : date</div>
+		<h4 id="os_print_horiz_line" class="title">os_print_horiz_line</h4>
+		<p class="description">Draw a horizontal line on the screen</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX - line type (1 for double, otherwise single)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_print_char" class="title">os_print_char</h4>
+		<p class="description">Reset cursor to start of next line</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - character to print</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_print_newline" class="title">os_print_newline</h4>
+		<p class="description">Reset cursor to start of next line</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_kbd_flush_buffer" class="title">os_kbd_flush_buffer</h4>
+		<p class="description">clear the keyboard buffer</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : keyboard</div>
+		<h4 id="os_kbd_check_buffer" class="title">os_kbd_check_buffer</h4>
+		<p class="description">check if any character in the keyboard buffer</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">if the keyboard buffer empty the AX register is 0</div>
+		</div>
+		<div class="section">Section : keyboard</div>
+		<h4 id="os_kbd_get_char" class="title">os_kbd_get_char</h4>
+		<p class="description">get charcter from the keyboard buffer. If the buffer is empty does not wait for a character and return AX=0. If is not empty return scan code and ascii code of the character in the buffer</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">if the keyboard buffer empty AX=0</div>
+			<div class="param">if the keyboard buffer is not empry AH=scan code</div>
+			<div class="param">if AH=scan code</div>
+			<div class="param">if AL=ascii code</div>
+		</div>
+		<div class="section">Section : keyboard</div>
+		<h4 id="os_kbd_wait_for_key" class="title">os_kbd_wait_for_key</h4>
+		<p class="description">Waits for keypress and returns key</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - key pressed, other regs preserved</div>
+		</div>
+		<div class="section">Section : keyboard</div>
+		<h4 id="os_kbd_check_for_key" class="title">os_kbd_check_for_key</h4>
+		<p class="description">Scans keyboard for input, but doesn't wait</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - 0 if no key pressed, otherwise scan code</div>
+		</div>
+		<div class="section">Section : keyboard</div>
+		<h4 id="os_dump_registers" class="title">os_dump_registers</h4>
+		<p class="description">Displays register contents in hex on the screen</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX/BX/CX/DX - registers to show</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : debug</div>
+		<h4 id="os_int_to_string" class="title">os_int_to_string</h4>
+		<p class="description">Convert value in DX to string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - integer</div>
+			<div class="param">BX - location of string</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">BX - location of converted string (other regs preserved)</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">Based on public domain code</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_speaker_tone" class="title">os_speaker_tone</h4>
+		<p class="description">Generate PC speaker tone (call _os_speaker_off after)</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - note frequency</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : PC speaker</div>
+		<h4 id="os_speaker_off" class="title">os_speaker_off</h4>
+		<p class="description">Turn off PC speaker</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers preserved)</div>
+		</div>
+		<div class="section">Section : PC speaker</div>
+		<h4 id="os_input_dialog" class="title">os_input_dialog</h4>
+		<p class="description">Get text string from user via a dialog box</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - string location</div>
+			<div class="param">BX - message to show</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - string location</div>
+		</div>
+		<div class="section">Section : dialog</div>
+		<h4 id="os_dialog_box" class="title">os_dialog_box</h4>
+		<p class="description">Print dialog box in middle of screen, with button(s)</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI, BX, DI - string locations (set registers to 0 for no display)</div>
+			<div class="param">DX = 0 for single 'OK' dialog, 1 for two-button 'OK' and 'Cancel'</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">If two-button mode, AX = 0 for OK and 1 for cancel</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">: Each string is limited to 40 characters</div>
+		</div>
+		<div class="section">Section : dialog</div>
+		<h4 id="os_input_string" class="title">os_input_string</h4>
+		<p class="description">Take string from keyboard entry</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX = location of string, other regs preserved</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX = location of string, other regs preserved</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">(Location will contain up to 255 characters, zero-terminated)</div>
+		</div>
+		<div class="section">Section : keyboard</div>
+		<h4 id="os_string_length" class="title">os_string_length</h4>
+		<p class="description">Return length of a string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - length (other regs preserved)</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_not_find_char" class="title">os_string_not_find_char</h4>
+		<p class="description">Find location of first non character in a string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string location</div>
+			<div class="param">DL - character to find</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - location in string, or 0FFFFh if char not present</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_find_char" class="title">os_string_find_char</h4>
+		<p class="description">Find location of character in a string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string location</div>
+			<div class="param">DL - character to find</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AX - location in string, or 0 if char not present</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_uppercase" class="title">os_string_uppercase</h4>
+		<p class="description">Convert zero-terminated string to upper case</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_n_uppercase" class="title">os_string_n_uppercase</h4>
+		<p class="description">Convert n first characters of zero-terminated string to upper case</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string location</div>
+			<div class="param">CX - number of character to uppercase</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_lowercase" class="title">os_string_lowercase</h4>
+		<p class="description">Convert zero-terminated string to lower case</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_copy" class="title">os_string_copy</h4>
+		<p class="description">Copy one string into another</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - source</div>
+			<div class="param">DI - destination (programmer ensure sufficient room)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_truncate" class="title">os_string_truncate</h4>
+		<p class="description">Chop string down to specified number of characters</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string location</div>
+			<div class="param">AX - number of characters</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">String modified, registers preserved</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_join" class="title">os_string_join</h4>
+		<p class="description">Join two strings into a third string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string one,</div>
+			<div class="param">BX - string two,</div>
+			<div class="param">DI - destination string</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_chomp" class="title">os_string_chomp</h4>
+		<p class="description">Strip leading and trailing spaces from a string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_strip" class="title">os_string_strip</h4>
+		<p class="description">Removes specified character from a string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string location</div>
+			<div class="param">DL - character to remove</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_compare" class="title">os_string_compare</h4>
+		<p class="description">See if two strings match</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string one</div>
+			<div class="param">DI - string two</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">CF set if same, clear if different</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_n_compare" class="title">os_string_n_compare</h4>
+		<p class="description">See if n characters of two strings match.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string one</div>
+			<div class="param">DI - string two</div>
+			<div class="param">CX - number of characters</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">CF set if same, clear if different</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_string_strincmp" class="title">os_string_strincmp</h4>
+		<p class="description">See if two strings match up to set number of chars</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - string one</div>
+			<div class="param">DI - string two</div>
+			<div class="param">CL - chars to check</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">carry set if same, clear if different</div>
+		</div>
+		<div class="section">Section : string</div>
+		<h4 id="os_print_space" class="title">os_print_space</h4>
+		<p class="description">Print a space to the screen</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_dump_string" class="title">os_dump_string</h4>
+		<p class="description">Dump string as hex bytes and printable characters</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - points to string to dump</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_print_digit" class="title">os_print_digit</h4>
+		<p class="description">Displays contents of AX as a single digit. Works up to base 37, ie digits 0-Z</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - "digit" to format and print</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_print_1hex" class="title">os_print_1hex</h4>
+		<p class="description">Displays low nibble of DL in hex format</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL = number to format and print</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_print_2hex" class="title">os_print_2hex</h4>
+		<p class="description">Displays DL in hex format</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - number to format and print</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_print_4hex" class="title">os_print_4hex</h4>
+		<p class="description">Displays DX in hex format</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - number to format and print</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : print</div>
+		<h4 id="os_long_int_to_string" class="title">os_long_int_to_string</h4>
+		<p class="description">Convert value in DX:CX to string</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX:CX - long unsigned integer</div>
+			<div class="param">BX - number base</div>
+			<div class="param">DI - string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">DI - location of converted string</div>
+		</div>
+		<div class="section">Section : long int</div>
+		<h4 id="os_long_int_negate" class="title">os_long_int_negate</h4>
+		<p class="description">Multiply value in DX:BX by -1</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX:BX - long integer</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">DX:BX = -(initial DX:AX)</div>
+		</div>
+		<div class="section">Section : long int</div>
+		<h4 id="os_pause" class="title">os_pause</h4>
+		<p class="description">Delay execution for specified microseconds</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">CX:DX - number of microseconds to wait</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : misc</div>
+		<h4 id="os_get_api_version" class="title">os_get_api_version</h4>
+		<p class="description">Return current version of TomOS API</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">AL - API version number</div>
+		</div>
+		<div class="section">Section : system</div>
+		<h4 id="os_get_int_handler" class="title">os_get_int_handler</h4>
+		<p class="description">Get the segment:offset of an interrupt handler</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DX - int number</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">ES:BX - contents of handler location</div>
+		</div>
+		<div class="section">Section : system</div>
+		<h4 id="os_modify_int_handler" class="title">os_modify_int_handler</h4>
+		<p class="description">Change location of interrupt handler</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">CX - int number</div>
+			<div class="param">SI - handler location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : system</div>
+		<h4 id="os_fatal_error" class="title">os_fatal_error</h4>
+		<p class="description">Display error message, take keypress, and restart OS</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - error message string location</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : error</div>
+		<h4 id="os_get_file_list" class="title">os_get_file_list</h4>
+		<p class="description">Generate comma-separated string of files on floppy</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX - location of string to store filenames</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_filename_convert" class="title">os_filename_convert</h4>
+		<p class="description">Change 'TEST.BIN' into 'TEST    BIN' as per FAT12</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - original filename string</div>
+			<div class="param">DI - location of 12-char string to place the result (zero-terminated)</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">new filename in BX, or carry set if filename invalid</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_load_file" class="title">os_load_file</h4>
+		<p class="description">Load file into bottom-half of TomOS RAM</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">SI - location of filename</div>
+			<div class="param">DI - location in RAM to load file</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">BX - file size (in bytes), carry set if program not found on the disk or too big</div>
+		</div>
+		<div class="output">
+		<p>NOTE:</p>
+<div class="param">Must be 32K or less, including load offset address)</div>
+<div class="param"> Based on free bootloader code by E Dehling</div>
+		</div>
+		<div class="section">Section : files</div>
+		<h4 id="os_execute_program" class="title">os_execute_program</h4>
+		<p class="description">Run code loaded at 100h in RAM (current CS)</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">BX = 1 if screen is to be cleared first, otherwise 0</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing (registers may be corrupt)</div>
+		</div>
+		<div class="section">Section : system</div>
+		<h4 id="os_memory_set" class="title">os_memory_set</h4>
+		<p class="description">Set block of memory.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">DL - character to set</div>
+			<div class="param">CX - number of bytes</div>
+			<div class="param">ES:DI - memory address</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">nothing</div>
+		</div>
+		<div class="section">Section : memory</div>
+		<h4 id="os_memory_copy" class="title">os_memory_copy</h4>
+		<p class="description">Copy block of bytes.</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">ES:DI - desination</div>
+			<div class="param">DS:SI - source</div>
+			<div class="param">CX - number of byte</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : memory</div>
+		<h4 id="os_int_reboot" class="title">os_int_reboot</h4>
+		<p class="description">Reboot machine via keyboard controller</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : system</div>
+		<h4 id="_os_int_restet_floppy" class="title">_os_int_restet_floppy</h4>
+		<p class="description">Reset floppy drive</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : floppy</div>
+		<h4 id="_os_int_l2hts" class="title">_os_int_l2hts</h4>
+		<p class="description">Calculate head, track and sector settings for int 13hConvert floppy sector from logical to physical</p>
+		<div class="input">
+		<p>INPUT:</p>
+			<div class="param">AX = logical sector; OUT: correct regs for int 13h</div>
+		</div>
+		<div class="output">
+		<p>OUTPUT:</p>
+			<div class="param">Nothing</div>
+		</div>
+		<div class="section">Section : floppy</div>
+</div>
+	</body>
+</html>

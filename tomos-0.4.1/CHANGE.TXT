@@ -1,0 +1,94 @@
+** TomOS-0.4.1 03 March 2009
+
+# FAT12 bug fixed
+  DIR command was listing deleted files.
+  Thanks to StalinPL for founding the bug.
+
+** TomOS-0.4 28 February 2009
+
+# FAT12 support for directories.
+  Only available through CLI.
+  It is possible to see a directory content
+  and change a working directory.
+
+# Build-in command DIR was removed from CLI.
+  Now 'DIR' is an external program.
+
+# New program 'CD' to change a working directory
+
+# Add a new build-in command 'FREE'.
+  Shows available memory. In TomOS-0.4 only 8164 bytes.
+  Used to finding memory leaks.
+
+# Command line passed to the executed program
+  see the os_command_line_get systemcall.
+
+# New systemcalls
+    - os_dir_open
+    - os_dir_close
+    - os_dir_change
+    - os_dir_next_file
+    - os_command_line_get
+    - os_file_convert_d2f
+    - os_file_convert_f2d
+    - os_char_uppercase
+    - os_char_lowwercase
+    - os_string_not_find_char
+
+# Changes in existing systemcalls
+    - os_string_find_char
+    - os_int_to_string
+
+# Fixed a bug in the TomOS memory manager
+ caused a crash of the system after freeing memory.
+
+# Fixed a bug in os_memory_copy.
+  
+
+** TomOS-0.3 13 February 2009
+
+# Modified the building script.
+
+# Modified the code responsible for FAT12 read/write
+  divided into smaller pieces to make it easier to
+  understand. 
+
+# Small fixes
+
+
+** TomOS-0.1 27 December 2008
+
+# IMPORTANT  !!!! TomOS IS NOT COMPATIBLE WITH MikeOS !!!!. (will be fixed)
+
+# Reorganized the directory structure.
+
+# Removed all programs written for MikeOS because incompatibility with TomOS
+  They will come back in TomOS-0.4.0
+
+# Moved all system calls to the interupt 47h. 
+  Now calling system call is done using macro 'syscall' 
+  declared in include/sycalls.inc. Every systemcall has own ID
+  declared in include/syscalls.inc. The file automaticly included during
+  a compilation.
+
+# Changed the keyboard handling derived from MikeOS.
+  Uses keyboard buffer. see the 'os_kbd_get_char' subroutine.
+
+# Added simple a memory manager (see source/os_mm.asm)
+  Now it is possible to allocate memory by applications.
+  Available the last 8KB of TomOS segment. (will be extended)
+
+# Fixed os_string_strip - do not use os_buffer
+
+# Added new macros (include/tomos.inc)
+
+# Changed names of few system calls to unified them.
+
+# Aded os_memory_copy , os_memory_set (see source/syscalls.asm).
+
+# Unified way of commenting source code. (see tools/docgen)
+
+# New documantation generated from comments by program docgen
+  To find out how to comment source code see doc/DOCGEN.TXT
+
+# TomOS provides a compilation script only for GNU/Linux operating system.

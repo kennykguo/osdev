@@ -1,0 +1,558 @@
+
+=============================================================================
+
+             Arduino Access For Use With MikeOS 4.1x And Above.
+             --------------------------------------------------
+
+  Important!
+  ----------
+
+Apologies for any typos and/or grammar errors as this MANUAL has not been
+spell or grammar checked at all. Every endeavour has been made to make this
+MANUAL as accurate as possible. IF there are any glaring errors then please
+contact me and I will correct it/them. Read the "The Legal Stuff:-" near the
+end of this MANUAL for more information...
+
+The Serial Board Converter circuit was extracted from the ORIGINAL Arduino
+board circuit and modified to suit and is re-issued under the CC Licence of
+the original along with the very minor modifications through this upload.
+
+Everything else is issued as Public Domain for MikeOS and is designed for
+use with MikeOS primarily, but is good enough for ANY other serial port
+usage.
+
+It IS assumed that you have a small amount of BASIC electronics knowledge,
+computer knowledge and able to do some simple building and coding.
+
+-----------------------------------------------------------------------------
+
+  Overview:-
+  ----------
+
+This project is a DEMO of how to access the Arduino series of I/O boards
+using MikeOS. It is the second in a series of projects for the person who
+wants to learn about how to not only write a very simple operating system
+but also to build hardware to run in/on such a restricted environment.
+
+Just because MikeOS only uses 64KB memory does not mean that power cannot
+be exracted from it. It can and the fact that the Arduino board is able to
+talk to MikeOS means a whole new avenue of experimentation can occur.
+
+Now have some childish fun and learn how to build stuff for yourself, both
+hardware, AND, software wise...
+
+  MINIMUM Requirements:-
+  ----------------------
+
+  1) Any complete PC with a(n) 80386 CPU, a(n) 80286 MIGHT work too!.
+  2) 1MB RAM.
+  3) A Serial communications port; 9, OR, 25 way ~D~ type connector.
+  4) A means of booting into MikeOS, (Floppy Disk, USB stick or CDROM).
+  5) MikeOS 4.1x.
+  6) Any Arduino Experimental Board; USB, OR, Serial types. I use the
+     Arduino Diecimila Board for my needs.
+  7) A serious machine to program the Arduino board with the '*.PDE' code.
+     (Windows Vista, Mac OSX and most Linux flavours.)
+
+  NOTE:-
+  ------
+
+Any machine that can boot from any of the three modes at item 4) above can
+be used in DEMO mode, as this mode simulates the Arduino Board WITHOUT the
+need of a Serial communications port and/or the hardware itself.
+
+Enjoy finding simple solutiuons to often very difficult problems... :)
+
+Bazza, G0LCU... :)
+
+-----------------------------------------------------------------------------
+
+                              Arduino Parts List.
+                              -------------------
+
+  1) R1 .............................  1 KilOhm, 1/8 Watt.
+  2) R2, R4, R5, R6 .................  10 KilOhms, 1/8 Watt.
+  3) R3 .............................  4.7 KilOhms, 1/8 Watt.
+  4) D1, D2 .........................  1N4148 silicon diode.
+  5) T1 .............................  BC547, or similar NPN.
+  6) T2 .............................  BC557, or similar PNP.
+  7) C1 .............................  10uF, 16V, electrolytic capacitor.
+  8) Small piece of StripBoard, 9 strips by 23 holes.
+  9) Terminal pins for insertion into Arduino board.
+ 10) 3 way terminal block.
+ 11) Red and Black connecting wire.
+ 12) Stereo audio coaxial cable.
+ 13) 9 or 25 way ~D~ type socket for serial connection.
+ 14) Matching cover for the ~D~ type socket.
+ 15) Heat Shrink Sleeving.
+ 16) Stick-on cable clips.
+ 17) Small Tie Wraps.
+
+ [18) A small 12V Regulated Power Supply for the Arduino Board.]
+
+  Notes:-
+  -------
+
+  1) Tolerances are + or - 10% or better.
+  2) Parts can be obtained from ANY source, (in fact nearly all of mine were
+     from the Junk Box)...
+  3) Items 15), 16) and 17) are optional.
+
+-----------------------------------------------------------------------------
+
+  Tools For This Project:-
+  ------------------------
+
+  1) Soldering Iron, 25W maximum.
+  2) Solder, any current legal type.
+  3) Small Side Cutters.
+  4) Small Long Nosed Pliers, this is optional.
+  5) Small Drill Bit, approximately 4mm diameter.
+  6) Small Screwdriver Set, approximately 1mm to 3mm sizes.
+  7) Small File, flat type.
+  8) "Stanley Knife", be extremely careful with this!!!
+  9) Hair Drier, this is for the Heat Shrink Sleeving and is optional.
+
+-----------------------------------------------------------------------------
+
+  Construction Information:-
+  --------------------------
+
+Before proceeding with the building of this simple Serial Port Converter
+Board be aware of any dangers that might occur and read the "WARNING."
+section towards the end of this MANUAL.
+
+As there are NO DRAWINGS and it is SO simple then you will have to rely on
+the photographs provided and associate them to the circuit diagram supplied.
+
+REFER TO THE CIRCUIT AND PHOTOGRAPHS FROM NOW ON...
+
+  Board Construction:-
+  --------------------
+
+  1) Using the "Stanley Knife" cut a piece of StripBoard, 9 strips by 23
+     holes; use with extreme care!!!
+  2) Using the file trim the cut edges to remove any sharp areas.
+  3) Using one of the small screwdrivers open up three holes to fit the
+     terminal block into place, see ARDUINO2.JPG for the positions.
+  4) Using the 4mm drill bit cut the strips in the places shown in the
+     ARDUINO2.JPG photograph.
+  5) Fit the terminal block and solder into place, 3 joints.
+  6) Fit the terminal pins and solder into place, 8 joints.
+  7) Fit the resistors onto the board and solder into place, 12 joints.
+  8) Fit the diodes, (NOTE, the correct orientation), and solder into place,
+     4 joints.
+  9) Using the Red and Black wires, trim the ends and solder into place,
+     2 joints. Trim the other ends for insertion into the Arduino Board`s
+     socket and solder the trimmed ends for rigidity.
+ 10) Fit the capacitor, (NOTE, the correct orientation), and solder into
+     place, 2 joints.
+ 11) Finally fit the transistors, (NOTE, which ones AND their orientation),
+     and solder into place, 6 joints.
+ 12) The board is NOW finished.
+ 13) Check ALL of your work.
+ 14) Check it AGAIN.
+ 15) Check it a third time!!! REMEMBER! any error can cause serious damage
+     to both the Arduino Board and/or the computer it is connected to.
+
+  The Connecting Cable:-
+  ----------------------
+
+  1) On the 9 pin ~D~ type socket connect the links on the socket as
+     required, 5 joints, use ANY available wire, see ARDUINO4.GIF.
+  2) Trim one end ofthe Audio cable and solder to the 9 pin ~D~ type socket
+     as shown in the circuit, 3 joints, NOTE, the BRAID goes to pin 5, also
+     see ARDUINO4.GIF.
+  3) Trim the other end, and connect to the terminal block outputs.
+     You CAN use the heat shrink sleeving here IF you want to but it IS
+     optional and NO soldering is needed, just a screwdriver.
+  4) Fit a stick-on cable clip and feed the wiring through for support.
+     This is optional. Optionally tie wrap the cables if required.
+  5) Check everything again, check for short circuits, open ciruits and
+     errors.
+  6) FINALLY, CHECK EVERYTHING ONCE MORE...
+  7) If you are satisfied that everything is OK then you are ready to test.
+
+-----------------------------------------------------------------------------
+
+  Programming The Arduino Board:-
+  -------------------------------
+
+As MikeOS is NOT able to program the board then this has to be done with
+a serious Operating System.
+
+Go to the......
+
+                             http://arduino.cc/
+
+......to obtain the archive for the platform of your choice.
+
+Load in the "ARDUINO.PDE" file and program the board ready for use in MikeOS.
+This is DEMO code only to give ONE ADC from 0 to 5V. It sends a BYTE to the
+serial port at about once per half second.
+
+  Testing:-
+  ---------
+
+As there will be NO supply rail, the 12V Regulated Power Supply, (adaptor),
+will be needed and will have to be connected to the socket on the ARDUINO
+board.
+
+There is no real way to test the board so do the following.
+Assume the computer is switched OFF.
+
+  1) Set the "PWR SEL" jumper on the Arduino board to "EXT".
+  2) Plug the 12V adaptor into the Arduino board, +VE inner pin.
+  3) Fit the built board to the Arduino socket as shown in the ARDUINO3.JPG
+     photograph.
+  4) Connect the Red and Black wires to the 5V and GND rails as shown in
+     the ARDUINO3.JPG photograph.
+  5) Power up the computer into MikeOS.
+  6) Plug the home built serial plug into the COM1: serial port.
+  7) Plug the adaptor into the household mains supply.
+  8) Load and start up the ARDUINO.BAS program.
+  9) Press the <RETURN/ENTER> key for REAL mode.
+ 10) Using a wire link connect between these three positions:-
+     A) Analog IN 0 to GND, value should be "0.00".
+     B) Analog IN 0 to 3V3, value should be around "3.10" to "3.50".
+     C) Analog IN 0 to 5V, value should read "5.10".
+ 11) If all is well then you now have ARDUINO running on MikeOS.
+ 12) IF NOT, link the INPUT and OUTPUT terminals on the home built board.
+ 13) IF it IS now working then swap the INPUT and OUTPUT wires.
+ 14) IF IS STILL NOT WORKING, IMMEDIATELY POWER DOWN AND RECHECK EVERYTHING
+     AGAIN AND DO ANY CORRECTIONS!!!
+ 15) Good luck... :)
+
+IF you have successfully got the board working then you now have Arduino
+talking to MikeOS and you can start experimenting for yourself for multiple
+analogue and digital Input/Output...
+
+=============================================================================
+
+A brief description of the MikeBASIC code...
+
+On program startup a (C), version number and keyboard access is displayed.
+
+The version is NOW at 0.20.
+
+It then holds until either ~D~ or ~d~, OR <RETURN/ENTER> is pressed.
+~D~ or ~d~ starts the DEMO mode that will run WITHOUT Arduino connected.
+<RETURN/ENTER> ASSUMES that you have connected the home built hardware to
+the computer!!!
+
+The screen then prints a digital readout and an analogue bargraph display.
+
+To QUIT just press the ~Esc~ key and it will bring you back to MikeOS.
+
+
+ ARDUINO.BAS, The MikeBASIC Code:-
+ ---------------------------------
+
+REM Arduino DEMO to access ADC1 and display a digital and
+REM analogue readout.
+REM Original idea copyright, (C)2010, B.Walker, G0LCU.
+REM Issued to MikeOS as Public Domain...
+
+
+REM Set up variables here.
+REM a = Arduino 8 bit value in decimal.
+REM b = 7 bit depth bar graph value.
+REM c = column to be PRINTed to.
+REM d = DEMO mode override, d = 1, DEMO mode.
+REM k = keyboard value, 27 for the "Esc" key.
+REM m = anything and discarded after each use.
+REM n = anything and discarded after each use.
+REM o = anything and discarded after each use.
+a = 255
+b = 127
+c = 0
+d = 1
+k = 27
+m = 0
+n = 0
+o = 0
+REM Variable list done!
+
+
+REM Display version, OS and (C) first.
+CURSOR OFF
+MOVE 25 1
+PRINT "Arduino DEMO, Version 0.20...."
+MOVE 16 3
+PRINT "(C)2010, B.Walker, G0LCU. Issued as PD to MikeOS."
+MOVE 21 5
+PRINT "[D] or [d] for default DEMO mode......" ;
+MOVE 21 6
+PRINT "[ENTER/RETURN] for REAL Arduino Mode.." ;
+REM Initial display setup done!
+
+
+demohold:
+REM Keyboard selection access.
+GETKEY k
+IF k = 68 THEN GOTO start
+IF k = 100 THEN GOTO start
+IF k = 13 THEN GOTO serialon
+GOTO demohold
+REM Keyboard selection done!
+
+
+serialon:
+REM Switch on the Serial Port to 1200bps.
+d = 0
+SERIAL ON 1200
+GOTO startserial
+REM Serial setup done!
+
+
+start:
+REM Draw the display here, digital box first.
+d = 1
+startserial:
+MOVE 20 5
+PRINT "                                        "
+MOVE 20 6
+PRINT "                                        "
+MOVE 31 5
+n = 218
+PRINT CHR n ;
+n = 196
+FOR c = 32 TO 47
+MOVE c 5
+PRINT CHR n ;
+MOVE c 7
+PRINT CHR n ;
+NEXT c
+MOVE 48 5
+n = 191
+PRINT CHR n ;
+n = 179
+MOVE 31 6
+PRINT CHR n ;
+MOVE 48 6
+PRINT CHR n ;
+n = 192
+MOVE 31 7
+PRINT CHR n ;
+n = 217
+MOVE 48 7
+PRINT CHR n ;
+MOVE 34 6
+PRINT "0.00 Volt(s)."
+MOVE 23 8
+PRINT "(Digital resolution is 0.02 Volts.)"
+REM Digital readout done!
+REM Now the analogue box with a 0V to 5+V scale.
+n = 218
+MOVE 7 14
+PRINT CHR n ;
+n = 197
+m = 193
+FOR c = 8 TO 71
+MOVE c 14
+PRINT CHR n ;
+MOVE c 16
+PRINT CHR m ;
+NEXT c
+n = 191
+MOVE 72 14
+PRINT CHR n ;
+n = 179
+MOVE 7 15
+PRINT CHR n ;
+MOVE 8 15
+PRINT CHR n ;
+MOVE 71 15
+PRINT CHR n ;
+MOVE 72 15
+PRINT CHR n ;
+n = 217
+MOVE 72 16
+PRINT CHR n ;
+n = 192
+MOVE 7 16
+PRINT CHR n ;
+c = 8
+n = 179
+scalemarker:
+MOVE c 13
+PRINT CHR n ;
+c = c + 5
+IF c > 72 THEN GOTO scale
+GOTO scalemarker
+scale:
+MOVE 7 12
+PRINT "0.0  0.4  0.8  1.2  1.6  2.0  2.4  2.8  3.2  3.6  4.0  4.4  4.8 V."
+MOVE 8 17
+PRINT "(Analogue resolution is half of one small division, 0.04 Volts.)"
+MOVE 5 18
+PRINT "Scale in 0.08 Volts per small division, 0.40 Volts per large division."
+MOVE 5 20
+PRINT "A simple 0.00 to 5.10 Volt DC DEMO voltmeter, using the Arduino Board."
+MOVE 29 22
+PRINT "Press 'Esc' to Quit..." ;
+REM Analogue readout done!
+
+
+scan:
+REM Grab a byte from the serial port or generate one randomly.
+IF d = 0 THEN SERIAL REC a
+IF d = 1 THEN RAND a 0 255
+REM Generate a pseudo-floating point digital readout.
+CURSOR OFF
+MOVE 34 6
+PRINT "0.00" ;
+IF a = 0 THEN GOTO rescan
+b = a * 2
+IF b > 99 THEN MOVE 35 6
+IF b > 99 THEN PRINT b ;
+IF b > 99 THEN MOVE 35 6
+IF b > 99 THEN CURSCHAR n
+IF b > 99 THEN MOVE 34 6
+IF b > 99 THEN PRINT CHR n ;
+IF b > 99 THEN PRINT "." ;
+IF b > 99 THEN GOTO rescan
+IF b > 9 THEN MOVE 36 6
+IF b > 9 THEN PRINT b ;
+IF b > 9 THEN GOTO rescan
+IF b > 0 THEN MOVE 37 6
+IF b > 0 THEN PRINT b ;
+REM Pseudo-floating point digital readot done!
+rescan:
+REM Display the analogue display.
+b = a / 2
+o = 1
+c = 9
+n = 179
+MOVE 8 15
+PRINT CHR n ;
+PRINT "                                                              " ;
+PRINT CHR n ;
+m = 221
+n = 222
+IF b = 0 THEN GOTO exitkey
+MOVE 8 15
+IF o = 1 THEN PRINT CHR n ;
+n = 219
+bargraph:
+IF o >= b THEN GOTO exitkey
+MOVE c 15
+IF o <= b THEN PRINT CHR m ;
+o = o + 1
+MOVE c 15
+IF o <= b THEN PRINT CHR n ;
+c = c + 1
+o = o + 1
+GOTO bargraph
+REM Analogue bargraph display done!
+exitkey:
+PAUSE 10
+CURSOR ON
+REM Press the "Esc" key to quit.
+GETKEY k
+IF k = 27 THEN GOTO cleanexit
+GOTO scan
+REM DEMO or REAL display finished!
+
+
+cleanexit:
+REM Quit the program here.
+CLS
+END
+REM Program end...
+
+-----------------------------------------------------------------------------
+
+  ARDUINO.PDE, The Arduino Code:-
+  -------------------------------
+
+/* Using the Arduino Diecimila as a DEMO single channel ADC for MikeOS. */
+/* ARDUINO.PDE source code for this DEMO. */
+/* This idea is copyright, (C)2008-2010, B.Walker, G0LCU. */
+/* For use with MikeOS 4.1x and issued as Public Domain. */
+
+/* Set up a variable 1 byte in size for basic analogue input. */
+int analogue0 = 0;
+
+void setup() {
+  /* open the serial port at 1200 bps. This rate is used for purely */
+  /* for simplicity only. */
+  Serial.begin(1200);
+
+  /* Set the analogue voltage reference, DEFAULT is 5V in this case. */
+  analogReference(DEFAULT);
+}
+
+void loop() {
+  /* Read the 10 bit analogue voltage on analogue input 0. */
+  analogue0 = analogRead(0);
+  /* Convert to a byte value by dividing by 4. */
+  analogue0 = analogue0/4;
+
+  /* Send to the Serial Port the byte value. */
+  Serial.print(analogue0, BYTE);
+  
+  /* Delay 500 milliseconds before taking the next reading. */
+  delay(500);
+}
+/* End of simple code. */
+
+-----------------------------------------------------------------------------
+
+Well that is all there is to it. Now that Arduino is capable of talking to
+MikeOS then that makes a plethora of uses for MikeOS and not just purely
+for OS writing and learning in Assembly code.
+
+Enjoy finding simple solutions to often very difficult problems... ;o)
+
+=============================================================================
+
+                                IMPORTANT:-
+                                -----------
+
+    The Legal Stuff:-
+    -----------------
+
+    These programs are Freeware and no profit will be made from them,
+    also all of the files must remain unaltered and intact including this
+    one. The author is not responsible for any damage to, or loss of, or
+    failure of equipment or data caused in any way by the use of these
+    programs. There is NO warranty with the use of these software releases
+    and YOU USE THEM AT YOUR OWN RISK.
+
+-----------------------------------------------------------------------------
+
+                                 WARNING.
+                                 --------
+
+  1) DISCONNECT any faulty equipment under test from the MAINS supply.
+  2) If a DC supply is used do NOT reverse polarity the connections.
+  3) Do NOT power up any electronic item until it is safe to do so.
+  4) CHECK and RECHECK all of your construction and repair work thoroughly.
+  5) Handle ALL tools used with care.
+  6) Beware of ALL types of solvents, glues and etching fluids.
+  7) NEVER leave a soldering iron switched on unattended.
+  8) KEEP everything OUT of the reach of small children.
+  9) Switch OFF the computer before disconnecting or connecting any hardware.
+ 10) And finally read 1) to 9) again.
+
+-----------------------------------------------------------------------------
+
+   Contact:-
+   ---------
+
+   Mr Barry Walker, G0LCU,
+   70 King George Road,
+   Loughborough,
+   Leicestershire,
+   LE11 2PA,
+   England.
+
+   Email:-     wisecracker@tesco.net
+   URL:-       http://homepages.tesco.net/wisecracker/G0LCU.HTM
+
+   (Author of the ~TestGear?~ projects in the ~docs/hard~ drawer of AMINET.)
+
+               http://aminet.net/search?readme=wisecracker
+
+=============================================================================

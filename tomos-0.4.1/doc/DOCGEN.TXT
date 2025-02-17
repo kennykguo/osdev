@@ -1,0 +1,70 @@
+To comment a procedure follow the below template
+
+; ------------------------------------------------------------
+; @proc <procedure name>
+; <procedure description>
+; <procedure description continue>
+; <procedure description continue>
+;
+; @param_in <description>
+; @param_in <description>
+; @param_out <description>
+; @param_out <description>
+; @section "<section name>"
+; @see <procedure name> <procedure name> <procedure name> <procedure name>
+; @note
+; <notes>
+; <notes>
+; <notes>
+
+procedure_name:
+
+example taken from include/os_mouse_syscalls.asm
+
+; ------------------------------------------------------------------
+; @proc os_mouse_set_user_subroutine
+; Set Mouse User Defined Subroutine and Input Mask.
+;
+; @param_in CX - call mask (see #4)
+; @param_in ES:DX - FAR routine (see #5)
+; @param_out  Nothing
+; @section "mouse"
+; @note
+;  The driver calls a user subroutine if one of the events occurs specified int call mask.
+;  (#4) Bitfields for mouse call mask:
+;    defined in include/tomos.inc.
+;    Bit(s) Description 
+;    MOUSE_EVENT_MOVED (bit 0) call if mouse moves 
+;    MOUSE_EVENT_LEFT_PRESSED (bit 1) call if left button pressed 
+;    MOUSE_EVENT_LEFT_RELEASED(bit 2) call if left button released 
+;    MOUSE_EVENT_RIGHT_PRESSED (bit 3) call if right button pressed 
+;    MOUSE_EVENT_RIGHT_RELEASED (bit 4) call if right button released 
+;    7-15 unused
+;  (#5) Values interrupt routine is called with:. 
+;    AX = condition mask (same bit assignments as call mask). 
+;    BX = button state. 
+;    CX = cursor column. 
+;    DX = cursor row. 
+;    SI = horizontal mickey count. 
+;    DI = vertical mickey count 
+
+If you created a new section place a decription for the section in the source/docinfo
+
+
+; -------------------------------
+; @section "<section name>"
+; <section description>
+; <section description continue>
+; <section description continue>
+
+example taken from source/docinfo
+
+; -------------------------------
+; @section "cursor"
+; Handle cursor in a text mode.
+
+
+
+
+
+

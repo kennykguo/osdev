@@ -1,0 +1,57 @@
+
+                  Parts List For The PC Type A-D Converter.
+                  -----------------------------------------
+
+  1) R1.....................  10 KilOhms, 1/8 Watt Resistor.
+  2) R2.....................  1 KilOhm, 1/8 Watt Resistor.
+  3) R3.....................  680 Ohms, 1/8 Watt Resistor.
+  4) R4.....................  10 KilOhms, 1/8 Watt Resistor.
+
+  5) C1.....................  100pF Capacitor, 35 Volts or greater working.
+
+  6) ZD1....................  7.5 Volt Zener Diode.
+  7) ZD2....................  2.4 Volt Zener Diode.
+
+  8) RV1....................  4.7 KilOhms Preset Variable Resistor.
+
+  9) IC1....................  ADC0804LCN A-D Converter IC.
+ 10) IC2....................  CD4019 CMOS IC.
+ 11) SK1....................  Any Type Of Input Socket, PHONO/RCA.
+ 12) 25 Pin ~D~ Type Male Plug.
+ 13) Matching ~D~ Type Shell for the plug.
+ 14) IC Holder for ADC0804LCN ADC IC.
+ 15) IC Holder for CD4019 CMOS IC.
+ 16) Various Coloured Wire. See ~MANUAL.TXT~ for colours, etc...
+ 17) Stripboard/Veroboard. See the ~MANUAL.TXT~ for cutting dimensions.
+ 18) Tinned Copper Wire, as required.
+ 19) Small Cable Ties.
+ 20) Stick On Cable Clips, as required.
+ 21) Sundries, eg Screws, Nuts, Etc... Etc...
+ 22) NEW, Duracel AA 1.5 Volt Alkiline Battery for calibration.
+
+----------------------------------------------------------------------------
+
+  Notes:-
+  -------
+
+  1) All component tolerances are + or - 10% or better.
+  2) All components can be sourced from any supplier.
+  3) Items 19), 20) and 21) are optional.
+  4) Item 22) MUST be NEW as a reference starting point for calibration.
+
+----------------------------------------------------------------------------
+
+    Mr Barry Walker,
+    70 King George Road,
+    Loughborough,
+    Leicestershire,
+    LE11 2PA,
+    England.
+
+    Email to:-
+
+    wisecracker@tesco.net
+
+    BYE.....
+
+============================================================================

@@ -1,0 +1,917 @@
+#!/usr/bin/perl
+
+# Copyright (c) 2008, TomOS
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are met:
+#     * Redistributions of source code must retain the above copyright
+#       notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above copyright
+#       notice, this list of conditions and the following disclaimer in the
+#       documentation and/or other materials provided with the distribution.
+#     * Neither the name of the <organization> nor the
+#       names of its contributors may be used to endorse or promote products
+#       derived from this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY TOMOS DEVELOPERS ''AS IS'' AND ANY
+# EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+# DISCLAIMED. IN NO EVENT SHALL <copyright holder> BE LIABLE FOR ANY
+# DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+# (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+# LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+# ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+# SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+# supported sections:
+# @proc - valid in MAIN
+# @param_in/@param_out - valid in @proc
+# @see - valid in @proc
+# @note - valid in @proc
+# @section - valid in MAIN, @proc
+# @mainpage - valid in MAIN
+# @header - valid in @mainpage
+
+($main::section_CSS = <<SECTIONCSS);
+
+body{
+    font-size: 13pt;
+    background-color: #DDDDDD;
+}
+
+.section_list{}
+
+.select{
+    background-color: grey;
+}
+
+.section_list p{
+    margin-top:0;
+    margin-bottom:0;
+    margin-left:1em;
+    padding:0;
+}
+
+.section_table{
+    width:80%;
+    clear:both;
+    
+}
+
+.section_table tr td.name{
+    width:14em;
+    vertical-align:top;
+}
+
+.section_table tr td.description{
+    vertical-align:top;
+}
+
+.section_table tr td p{
+    margin:0;
+    padding:0;
+}
+
+.section_table tr td.name p, p.funclink{
+    margin: 0.3em 1em 0.3em 1em;
+    padding:0;
+}
+
+.section_table tr td.name p, p.funclink a{
+    padding:0;
+    margin:0;
+}
+
+.input, .output , .section, .see, .note{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: 1em;
+}
+
+.input p, .output p {
+    font-style:italic;
+    margin: 0;
+}
+
+.input .param, .output .param {
+    margin-left: 1em;
+}
+
+.description{
+    margin:0;
+    margin-left:1em;
+}
+
+h4.title{
+    margin:0;
+}
+
+ul.mainmenu {
+    margin: 0;
+    padding:0;
+    margin-left: auto;
+    margin-right: auto;
+    clear: both;
+    list-style-type: none;
+    width: 100%;
+}
+
+ul.mainmenu li{
+    float:left;
+    display:span;
+    width: 20%;
+}
+
+ul.mainmenu li a{
+    display: block;
+    text-align: center;
+}
+
+#index p{
+    margin: 1em 3em 0em 3em;
+    clear:both;
+}
+
+#index h4, #index h3, #index h2{
+    padding: 0;
+    width:100%;
+    text-align: center;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    float:left;
+}
+
+SECTIONCSS
+
+($main::menu = <<MENU);
+
+<ul class="mainmenu">
+    <li><a class="$light1" href="index.html">Main</a></li>
+    <li><a class="$light2" href="files.html">Files</a></li>
+    <li><a class="$light3" href="sections.html">Sections</a></li>
+    <li><a class="$light4" href="all.html">All</a></li>
+</ul>
+
+
+
+
+MENU
+
+use strict 'vars';
+use Switch;
+use File::Path;
+use Cwd 'getcwd';
+use Cwd 'abs_path';
+
+my $DIR;
+my %options;
+my %dochash;
+
+my @menu = (
+	['index.html', 'Main'],
+	['files.html', 'Files'],
+	['sections.html', 'Sections'],
+        ['all.html', 'All']);
+
+use constant SECTION => 1;
+use constant PROCEDURE => 2;
+use constant MAIN => 3;
+use constant MAINPAGE => 4;
+use constant MAINPAGE_ITEM => 5;
+
+my $reg_command = '^\s*;\s*@([\d\w]+)\s*(.*)$';
+
+if(!open(SETTINGS, '<',  '.docgen')){
+    ask_to_create_docgen();      
+    open(SETTINGS, '<',  '.docgen') || die $@;
+}
+
+parse_docgen(\*SETTINGS, \%options);
+
+format_docgen(\%options);
+
+close(SETINGS);
+
+scan_files(\%options, \%dochash);
+create_sections_entity(\%dochash);
+
+eval {
+    &{"generate_$_"}(\%dochash, \%options) for( @{$options{'OUTPUT'}});
+
+}; die "$options{'OUTPUT'} - unknown output format check field OUTPUT in .docgen file\n" if $@;
+
+sub generate_html(){
+    my ($dochash ,$options) = @_;
+    my $filearray = $dochash->{'FILES'};
+    my $workingdir = getcwd();
+    my $option_print_empty = include_empty_files($options);
+    my $thelongest = get_longest_filename($filearray);
+    print "Creating output directory...\"$options->{'OUTPUT_DIR'}/doc\"\n";
+    eval { mkpath($options->{'OUTPUT_DIR'}.'/doc') };
+    if($@){  die "cant create output directory $@";}
+    chdir($options->{'OUTPUT_DIR'}.'/doc');
+    for (@$filearray){
+        my $filehash = $_;
+	my $htmlname = $filehash->{'HTMLNAME'};
+	print "Creating file...$htmlname";
+	print_dots($htmlname, $thelongest);
+	if($option_print_empty && scalar(@{$filehash->{'DOCS'}}) == 0) {
+	    print "skiped\n";next;
+        }
+	open(HFILE, ">", $htmlname) || die $@;
+	create_html(\*HFILE, $filehash, $options, $filehash->{'NAME'});
+	close(HFILE);
+	print "done\n";
+    }
+    open(HFILES, ">", 'files.html') || die $@;
+    print "Creating file...files.html";
+    create_files(HFILES, $dochash, $options, 'files');
+    close(HFILES);
+    print_dots('files.html', $thelongest);
+    print "done\n";
+    open(HSECTIONS, ">", 'sections.html') || die $@;
+    print "Creating file...sections.html";
+    create_sections_html(\*HSECTIONS, $dochash, $options, 'sections');
+    close(HSECTIONS);
+    print_dots('sections.html', $thelongest);
+    print "done\n";
+    open(HSTYLECSS ,">style.css") || die 'cant create "style.css"';
+    print "Creating file...style.css";
+    create_section_css_file(\*HSTYLECSS, $dochash, $options);
+    close(HSTYLECSS);
+    print_dots('style.css', $thelongest);
+    print "done\n";
+    open(HALL, '>' ,'all.html') || die $@;
+    print "Creating file...all.html";
+    create_all_html(\*HALL, $dochash, $options, 'all');
+    close(HALL);
+    print_dots('all.html', $thelongest);
+    print "done\n";
+    open(HINDEX, ">", 'index.html') || die $@;
+    print "Creating file...index.html";
+    create_index(HINDEX, $dochash, $options, 'index');
+    close(HINDEX);
+    print_dots('index.html', $thelongest);
+    print "done\n";
+    chdir($workingdir);
+    return 0;
+}
+
+sub create_index{
+    my ($hfile, $dochash, $options, $id) = @_;
+    print_header($hfile, 'style.css', $id);
+    print_main_menu($hfile, 0);
+    print $hfile '<div style="clear:both">'."\n";
+    print_homepage($hfile, $dochash, $options);
+    print $hfile '</div>'."\n";
+    print_end($hfile);
+    return 1;
+}
+
+sub print_homepage{
+    my($hfile, $dochash, $options) = @_;
+    my @pagearray;
+
+    @pagearray = (@pagearray, @{$_->{'MAINPAGE'}->{'TEXT'}}) for(@{$dochash->{'FILES'}});
+    my @sortedpagearray = sort{ $a->{'INDEX'} <=> $b->{'INDEX'} } @pagearray;
+    for(@sortedpagearray){
+        my $paragraph = $_;
+        next if($paragraph->{'TEXT'} =~ /^\s*$/);
+        print $hfile '<h2 style="text-align:center">'.$paragraph->{'HEADER'}.'</h2>'."\n";
+        print $hfile '<p>'.$paragraph->{'TEXT'}.'</p>'."\n";
+    }
+    return 1; 
+}
+
+sub create_all_html{
+    my ($hfile, $dochash, $options, $id) = @_;
+    my $option_print_empty = include_empty_files($options);
+    print_header($hfile, 'style.css', $id);
+    print_main_menu($hfile, 3);
+    print $hfile '<div style="clear:both">'."\n";
+    my $filehash = $dochash->{'FILES'};
+    my @function_array = ();
+    push(@function_array, @{$_->{'DOCS'}})  for(@$filehash);
+    my @alfaarray = ([],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[],[]);
+    for (sort{lc($a) cmp lc($b)} @function_array){
+        my $prochash = $_;
+	my $l = substr($prochash->{'NAME'},0,1) ;
+	$l =~ tr/a-z_/A-Z[/;
+	push (@{$alfaarray[ord($l)-ord('A')]}, $prochash);
+    }
+
+    my $i;
+    print $hfile '<table style="width:80%;margin-top: 2em;  margin-left:auto; margin-right:auto;"><tr>'."\n";
+    for($i = 0; $i<scalar(@alfaarray); ++$i){
+        my $l = chr($i+ord('A'));
+	$l =~ tr/[A-Z/_A-Z_/;
+        print $hfile '<td><a href="#'.$l.'">'.$l.'</a></td>';
+    }
+    print $hfile '</tr></table>'."\n";
+    for($i = 0; $i<scalar(@alfaarray); ++$i){
+        my $l = chr($i+ord('A'));
+        print $hfile '<h3 style="text-align:center;" id="'.$l.'">'.$l.'</h3>'."\n";
+        for(sort{lc($a) cmp lc($b)}@{$alfaarray[$i]}){
+	    print $hfile '<p style="text-align:center" ><a  href="'.create_html_name($_->{'SOURCE'}).'/#'.$_->{'NAME'}.'">'.$_->{'NAME'}.'</a></p>'."\n";
+        } 
+    }
+    print $hfile '</div>'."\n";
+    print_end($hfile);
+
+
+}
+
+sub get_longest_filename{
+    my $filearray = shift(@_);
+    my $longest = length('sections.html');
+    for (@$filearray){
+	my $l = length $_->{'HTMLNAME'};
+	$longest=$l if($l>$longest);
+    }
+    return $longest;
+}
+
+sub print_dots{
+    my ($string, $end) = @_;
+    print "."x($end-length($string)+3);
+
+}
+
+sub add_html_name{
+    my $filehash = shift(@_);
+    $filehash->{'HTMLNAME'} = create_html_name($filehash->{'NAME'});
+    return 1;
+}
+
+sub create_html_name{
+    my $name = shift(@_);
+    return $name.'.html';
+}
+
+sub create_files{
+    my ($hfile, $dochash, $options, $id) = @_;
+    my $filearray = $dochash->{'FILES'};
+    my $option_print_empty = include_empty_files($options);
+    print_header($hfile, 'style.css', $id);
+    print_main_menu($hfile,1);
+    print $hfile '<div style="clear:both;"><table class="section_table">'."\n";
+    print $hfile '<tr><td colspan="2"><h3>Files index</h3></td></tr>'."\n";
+    for (@$filearray){
+	my $filehash = $_;
+	next if($option_print_empty && scalar(@{$filehash->{'DOCS'}}) == 0);
+        print $hfile '<tr><td class="name"><p><a href="'.$filehash->{'HTMLNAME'}.'">'.$filehash->{'NAME'}.'</a></p></td><td class="description"><p>'.truncate_with_dots(format_description_string($filehash->{'DESCRIPTION'}), $options).'</p></td><tr>'."\n";
+    }
+    print $hfile '</table>'."\n";
+    print $hfile '</div>'."\n";
+    print_end($hfile);
+
+}
+
+sub create_sections_html{
+    my ($hfile, $dochash, $options, $id) = @_;
+
+    print_header($hfile, 'style.css', $id);
+    print_main_menu($hfile, 2);
+    add_sections(@_);
+    print_end($hfile);
+    return 1;
+}
+
+sub print_main_menu{
+    my ($hfile, $light) = @_;
+    print $hfile create_main_menu(\@menu, $light);
+    return 1;
+}
+
+sub create_main_menu{
+    my ($menu, $id)  = @_;
+    my $htmlmenu="";
+    my $i;
+    my $id = $id % scalar(@$menu);
+    $htmlmenu .= '<ul class="mainmenu">'."\n";
+    for($i=0; $i< scalar(@$menu); ++$i){
+        $htmlmenu .= '<li class="';
+	$htmlmenu .= 'select' if ($i==$id);
+        $htmlmenu .= '"><a href="'.$menu->[$i]->[0].'">'.$menu->[$i]->[1].'</a></li>'."\n";
+    }
+    $htmlmenu .= '</ul>'."\n";
+    return $htmlmenu;
+}
+
+sub add_sections{
+    my ($hfile, $dochash , $options) = @_;
+    my $option_print_empty = include_empty_sections($options);
+    my $section_list = $dochash->{'SECTIONS_LIST'};
+    my $section_descriptions = get_sections_descriptions($dochash);
+
+    print $hfile '<div style="clear:both"><table class="section_table"><tr><td colspan="2"><h3>Sections index</h3></td></tr>'."\n";
+    my @sections = sort(keys(%$section_list)); 
+    for(@sections){
+	my $section_name = $_;
+	next if($option_print_empty && scalar(@{$section_list->{"$section_name"}}) == 0);
+        print $hfile '<tr><td class="name"><p style="font-size:big"><a href="#'.$section_name.'">'.$section_name.'</a></p></td><td class="description"><p>'.format_description_string($section_descriptions->{$section_name}).'</p></td></tr>'."\n";
+    }
+    print $hfile '</table>'."\n";
+    foreach(keys(%$section_list)){
+        my $id = $_;
+
+	next if($option_print_empty && scalar(@{$section_list->{"$id"}}) == 0);
+	print $hfile '<table class="section_table">',"\n";
+	print $hfile '<tr><td colspan="2"><h3 style="margin-bottom:1px" id="'.$id.'">'.$_.'</h3><p style="margin:0px 0px 5px 10px;font-size:small">'.$section_descriptions->{$id}.'</p></td><tr>'."\n";
+        foreach(@{$section_list->{"$id"}}){
+	    print $hfile '<tr><td class="name"><p><a href="'.create_html_name($_->{'SOURCE'}).'#'.$_->{'NAME'}.'">'.$_->{'NAME'}.'</a></p></td><td class="description"><p>'.truncate_with_dots(format_description_string($_->{'DESCRIPTION'}), $options).'</p></td></tr>' ."\n";
+	}
+	print $hfile '</table>'."\n";
+    }
+    print $hfile '</div>'."\n"
+
+}
+
+sub get_sections_descriptions{
+    my $dochash = shift(@_);
+    my $sections = {};
+    for (@{$dochash->{'FILES'}}){
+	    my $filehash = $_;
+	    for(keys(%{$filehash->{'SECTIONS_DESC'}})){
+		    $sections->{$_} .= $filehash->{'SECTIONS_DESC'}->{$_};
+	    }
+    }
+    return $sections;
+}
+
+sub create_section_css_file{
+    my ($hfile, $dochash, $options) = @_;
+    print $hfile $main::section_CSS;
+    return 1;
+
+}
+
+sub include_empty_sections{
+    my $options = shift(@_);
+    return  $options->{'INCLUDE_EMPTY_SECTIONS'} =~ /[Nn][Oo]/;
+}
+
+sub include_empty_files{
+    my $options = shift(@_);
+    return  $options->{'INCLUDE_EMPTY_FILES'} =~ /[Nn][Oo]/;
+}
+
+sub create_html{
+    my ($hfile, $filehash, $options, $id) = @_;
+    if ($filehash->{'TYPE'} != MAIN) {return 0;}
+    print_header($hfile, 'style.css', $id);
+    print_main_menu($hfile, 1);
+    print $hfile '<div style="clear:both">'."\n";
+    print $hfile '<table>'."\n";
+    print $hfile '<tr><td>'."\n";
+    print_title($hfile, $filehash->{"NAME"});
+    print $hfile '</td></tr>'."\n";
+    print $hfile '<tr><td>'."\n";
+    print_description($hfile, $filehash);
+    print $hfile '</td></tr>'."\n";
+    print $hfile '</table>'."\n";
+    print_function_list($hfile, $filehash, $options);
+    print $hfile "\t\t".'<h3>Descriptions</h3>'."\n";
+    my $docarray = $filehash->{'DOCS'};
+    for (@$docarray){
+        print_entity($hfile, $_);
+    }
+    print $hfile '</div>'."\n";
+    print_end($hfile);
+}
+
+sub print_function_list{
+    my ($hfile, $filehash, $options) = @_;
+    my $functionlist = $filehash->{'DOCS'};
+    print $hfile '<table class="section_table">'."\n";
+    print $hfile '<tr><td celspan="2"><h3>Function list</h3></td></tr>'."\n";
+    print $hfile '<tr><td class="name"><p class="funclink"><a href="#'.$_->{'NAME'}.'">'.$_->{'NAME'}.'</a></p></td><td>'.truncate_with_dots(format_description_string($_->{'DESCRIPTION'}), $options).'</td></tr>'."\n" for(@{$functionlist});
+    print $hfile '</table>'."\n";
+    return 1;
+
+}
+
+sub print_entity{
+    my ($hfile, $entity) = @_;
+    print $hfile "\t\t".'<h4 id="'.$entity->{'NAME'}.'" class="title">'.$entity->{'NAME'}.'</h4>'."\n";
+    print $hfile "\t\t".'<p class="description">'.$entity->{'DESCRIPTION'}.'</p>'."\n";
+    print $hfile "\t\t".'<div class="input">'."\n";
+    print $hfile "\t\t".'<p>INPUT:</p>'."\n";
+    for (@{$entity->{'PARAMS_IN'}}){
+        print $hfile "\t\t\t".'<div class="param">'.$_.'</div>'."\n";
+        
+    }
+    print $hfile "\t\t".'</div>'."\n";
+    print $hfile "\t\t".'<div class="output">'."\n";
+    print $hfile "\t\t".'<p>OUTPUT:</p>'."\n";
+    for (@{$entity->{'PARAMS_OUT'}}){
+        print $hfile "\t\t\t".'<div class="param">'.$_.'</div>'."\n";
+        
+    }
+    print $hfile "\t\t".'</div>'."\n";
+    if(defined($entity->{'NOTE'})){
+	    print $hfile "\t\t".'<div class="output">'."\n";
+	    print $hfile "\t\t".'<p>NOTE:</p>'."\n";
+	    for(@{$entity->{'NOTE'}}){
+		    print $hfile '<div class="param">'.$_.'</div>'."\n";
+	}
+
+	print $hfile "\t\t".'</div>'."\n";
+    }
+
+
+    print $hfile "\t\t".'<div class="section">Section : '.$entity->{'SECTION'}->{'NAME'}.'</div>'."\n";
+
+    if(defined($entity->{'SEE'})){
+	    print $hfile "\t\t".'<p class="see"> see:';
+	    for (@{$entity->{'SEE'}}){
+		    print $hfile " $_";
+	    }
+	    print $hfile '</p>'."\n"
+    }
+}
+
+sub print_description{
+    my ($hfile, $filehash) = @_;
+    print $hfile '<p class="description">'.$filehash->{'DESCRIPTION'}.'</p>'."\n";
+    return 1;
+}
+
+sub print_header{
+    my ($hfile, $cssname, $id) = @_;
+    print $hfile '<!DOCTYPE html'."\n\t".'PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"'."\n\t".'"http://www.w3.org/TR/html14/loose.dtd">'."\n";
+    print $hfile '<html>'."\n".'<head>'."\n".'<style type="text/css">'."\n".'<!-- @import url('.$cssname.'); --!>'."\n".'</style>'."\n" .'</head>'."\n\t".'<body style="width:900px;" id="'.$id.'">'."\n";
+}
+
+sub print_end{
+    my $hfile = shift(@_);
+    print $hfile "\t".'</body>'."\n".'</html>'."\n";
+    return;
+}
+
+sub print_title{
+    my ($hfile, $title) = @_;
+    print $hfile "\t\t".'<h2 class="header">'.$title.'</h2>'."\n";
+    return;
+}
+
+sub scan_files{
+    my $options = shift(@_);
+    my $dochash = shift(@_);
+    opendir(DIR, './') || die "permission error\n";
+    my @files = readdir(DIR);
+    closedir(DIR);
+    $dochash->{"FILES"} = [];
+    for(@files){
+	chomp;
+	my $filename = $_;
+	my $flag = grep ($filename =~ /$_/, @{$options->{'INPUT'}});
+	if($flag==0){next;}
+        open(FILE,  "<" ,$filename) || die $@;
+	print "Parsing.........$filename\n";
+
+	my $filehash = {};
+	$filehash->{"NAME"} = $filename;
+	$filehash->{'TYPE'} = MAIN;
+	$filehash->{'SECTION'} = {'NAME' => $filename, 'TYPE' => SECTION};
+	$filehash->{'DOCS'} = [];
+	$filehash->{'DESCRIPTION'} = "";
+        add_html_name($filehash);
+	push(@{$dochash->{'FILES'}}, $filehash);
+        scan_file(\*FILE, $filehash);
+	close(FILE);
+    }
+    return 1;
+}
+
+sub scan_file{
+    my $filehandle = shift(@_);
+    my $filehash = shift(@_);
+    while(<$filehandle>){
+	chomp;
+	process_command($filehandle, $filehash, $_);
+    }
+    return 0;
+}
+
+sub process_command{
+    my $filehandle = shift(@_);
+    my $filehash = shift(@_);
+    my $line = shift(@_);
+
+    if($line =~$reg_command){
+        my $command = lc($1);
+	my $ret=0;
+        eval {$ret = &{"cmd_${command}_proc"}($filehandle, $filehash, $2);}; warn "unknown command \"$command\" $@\n" if $@;
+	return $ret;
+    }
+    return 0;
+}
+
+sub cmd_description_proc{
+    my ($filehandle, $filehash, $args) = @_;
+    chomp $args;
+    $filehash->{'DESCRIPTION'}.=$args;
+    while(<$filehandle>){
+        my $line = $_;
+        last if ($_ =~ /^\s*[^;]/);
+        $line =~ /^\s*;\s*(\s.*[^\s])\s*$/;
+	$filehash->{'DESCRIPTION'}.=$1;
+    }
+    return 1;
+}
+
+sub cmd_see_proc{
+    my $args = $_[2];
+    my $filehash = $_[1];
+    my $sechash = {};
+    my $see = [];
+
+    @{$see} =  split(" ", $args);
+    $filehash->{'SEE'} = $see;
+    return 1;
+
+}
+
+sub cmd_note_proc{
+    my ($filehandle, $filehash, $args) = @_;
+    my $type = $filehash->{'TYPE'};
+    if($type==PROCEDURE){
+	    chomp $args;
+	    $filehash->{'NOTE'} = [] if(!defined($filehash->{'NOTE'}));
+	    push(@{$filehash->{'NOTE'}}, $args) if($args ne "");
+	    while(<$filehandle>){
+		    my $line = $_;
+		    last if ($_ =~ /^\s*[^;]/);
+		    $line =~ /^\s*;\s*(\s.*[^\s])\s*$/;
+		    push (@{$filehash->{'NOTE'}}, $1);
+	    }
+    }
+    return 1;
+}
+
+sub cmd_section_proc{
+    my ($filehandle, $filehash, $args) = @_;
+    my $type = $filehash->{'TYPE'};
+    if($type==MAINPAGE){
+
+    }elsif($type==MAIN){
+        my $section = create_section_hash($args);
+	my $text = "";
+	while(<$filehandle>){
+	    next if ($_=~/^\s*;\s*$/);
+	    last if ($_!~/^\s*;\s*(.*)\s*$/);
+            $text .= $1;
+	}
+	$filehash->{'SECTIONS_DESC'} = {} if(!defined($filehash->{'SECTIONS_DESC'}));
+        $filehash->{'SECTIONS_DESC'}->{$section->{'NAME'}} .= $text;
+
+    }elsif($type==PROCEDURE){ 
+        $filehash->{'SECTION'} = create_section_hash($args);
+    }
+    return 1;
+}
+
+sub create_section_hash{
+    my $args = shift(@_);
+    my $sechash = {};
+    if ($args =~ /^\s*\"([^\"]*)\"\s*$/){
+        $sechash->{'NAME'} =  $1;
+    }else{
+        $sechash->{'NAME'} =  undef;
+        warn "syntax error\n";
+    }
+    $sechash->{'TYPE'} = SECTION;
+    return $sechash;
+}
+
+sub cmd_mainpage_proc{
+    my ($filehandle, $filehash, $args) = @_;
+    my $index;
+    if($filehash->{'TYPE'} != MAIN){return 0;}
+    chomp $args;
+    if(!defined($filehash->{'MAINPAGE'})){
+        $filehash->{'MAINPAGE'} = {};
+	$filehash->{'MAINPAGE'}->{'TEXT'} = [];
+	$filehash->{'MAINPAGE'}->{'TYPE'}=MAINPAGE;
+    }
+    my $mainhash = $filehash->{'MAINPAGE'};
+    if($args=~/^\s*([\d]+)\s*$/){
+       $index  = $1;
+       if(($index<0) || ($index>10)){ 
+           warn 'index too big'; 
+	   return 0;
+       }
+    }elsif($args=~/^\s*$/){
+       $index = scalar(@{$filehash->{'MAINPAGE'}->{'TEXT'}});
+    }else{
+       warn "syntax error";
+       return 0;
+    }
+    my $text = {};
+    $text->{'TYPE'} = MAINPAGE_ITEM;
+    while(<$filehandle>){
+        my $line = $_;
+        last if ($line =~ /^\s*[^;]/ );
+	next if ($line =~ /^\s*[;]\s*$/);
+	if (process_command($filehandle, $text, $line)!=0){next;}
+        $line =~ /^\s*;\s*(\s.*[^\s])\s*$/;
+	$text->{'TEXT'} .= $1;
+    }
+    $text->{'INDEX'} = $index;
+    $filehash->{'MAINPAGE'}->{'TEXT'}->[$index] = $text;
+    return 1;
+
+}
+
+sub cmd_header_proc{
+    my ($filehandle, $filehash, $args) = @_;
+    if ($filehash->{'TYPE'}!=MAINPAGE_ITEM){warn 'invalid token'; return 0;}
+    $filehash->{'HEADER'} = $args;
+    return 1;
+}
+
+
+sub cmd_proc_proc{
+    my $prochash = {};
+    my $filehandle = shift(@_);
+    my $filehash = shift(@_);
+    my $args = shift(@_);
+    my $name;
+
+    if ($args =~ /^\s*([\w\d]+)\s*$/){
+        $name =  $1;
+    }else{
+        return 0;
+    }
+
+    my $description;
+    while(<$filehandle>){
+        chomp;
+        if( $_ =~ /^\s*;?\s*$/){last;}
+	$_ =~ /^\s*;\s*(.*)$/;
+        $description.=$1;
+    }
+    $prochash->{'NAME'} = $name;
+    $prochash->{'DESCRIPTION'} = $description;
+    $prochash->{'TYPE'} = PROCEDURE;
+    $prochash->{'PARAMS_IN'} = [];
+    $prochash->{'PARAMS_OUT'} = [];
+    $prochash->{'SOURCE'} = $filehash->{'NAME'};
+    push (@{$filehash->{'DOCS'}} ,$prochash);
+
+    while(<$filehandle>){
+        last if (process_command($filehandle, $prochash, $_)==0);
+    }
+    return 1;
+
+}
+
+sub cmd_param_in_proc{
+    my $filehandle = shift(@_);
+    my $filehash = shift(@_);
+    my $args = shift(@_);
+    if($filehash->{'TYPE'} != PROCEDURE) {return 0;}
+    chomp $args;
+    push(@{$filehash->{'PARAMS_IN'}}, $args);
+    return 1;
+}
+
+sub cmd_param_out_proc{
+    my $filehandle = shift(@_);
+    my $filehash = shift(@_);
+    my $args = shift(@_);
+    if($filehash->{'TYPE'} != PROCEDURE) {return 0;}
+    chomp $args;
+    push(@{$filehash->{'PARAMS_OUT'}}, $args);
+    return 1;
+    
+}
+
+
+sub truncate_with_dots{
+    my ($string, $options) = @_;
+    my $brief_length = $options->{'BRIEF_LENGTH'};
+    if(length($string) <= $brief_length){ return $string;}
+    my $truncated = substr($string, 0, $brief_length);
+    $truncated =~ m/^(.*)\s+[^\s]*\s*$/;
+    return $1."...";
+    
+}
+
+sub ask_to_create_docgen{
+    print "docgen doesn't exists\nCreate a default docgen?[Y/n]";
+    $_ = <STDIN>;
+    chomp $_;
+    if ($_ =~ /^[Yy]?$/){ create_default_docgen(); return 1};
+    exit 1;
+}
+
+sub create_default_docgen{
+    print "creating docgen....";
+    open(DOCGEN, '>', '.docgen') || die "can't create .docgen. Check perrmisions\n";
+    print(DOCGEN  "# file generated by docgen\n");
+    print(DOCGEN  "OUTPUT = html\n");
+    print(DOCGEN  "INPUT = *.asm\n");
+    print(DOCGEN  "CASE_SENSITIVE = true\n");
+    print(DOCGEN  "INCLUDE_EMPTY_FILES = no\n");
+    print(DOCGEN  "INCLUDE_EMPTY_SECTIONS = no\n");
+    print(DOCGEN  "OUTPUT_DIR = ./\n");
+    print(DOCGEN  "BRIEF_LENGTH = 60\n");
+    close(DOCGEN);
+    print("done\n");
+    return 1;
+}
+
+sub parse_docgen{
+    my $file = shift(@_);
+    my $options = shift(@_);
+    my $nline=0;
+    SCAN:while(<$file>){
+	++$nline;
+	chomp;
+	if($_ =~ /\s*#/){ next;}
+        if($_ =~ /^\s*(\w+)\s*=\s*(.+)\s*$/){
+	    $options->{"$1"} = $2;
+        }else {
+            print ("syntax erron in line $nline\n");
+	}
+    }
+    return 1;
+}
+
+sub format_docgen{
+    my $options = shift(@_);
+    if ($options->{'OUTPUT'} eq ""){
+        die "No OUTPUT in .docgen\n"
+    }else{
+        $options->{'OUTPUT'} = [split(" ", $options->{'OUTPUT'})];
+    }
+    if ($options->{'INPUT'} eq ""){
+        die "No INPUT in .docgen\n"
+    }else{
+        $options->{'INPUT'} = [map ( format_INPUT($_) , split(" ", $options->{'INPUT'}))];
+    }
+    if ($options->{'INCLUDE_EMPTY_FILES'} eq ""){
+        warn "No INCLUDE_EMPTY_FILES in .docgen - assumed 'no'\n";
+	$options->{'INCLUDE_EMPTY_FILES'} = 'no';
+    }else{
+	if ($options->{'INCLUDE_EMPTY_FILES'} !~ /([Nn][Oo])|([Yy][Ee][Ss])/){die "invalid value of INCLUDE_EMPTY_FILES in .docgen\n"}
+    }
+    if ($options->{'INCLUDE_EMPTY_SECTIONS'} eq ""){
+        warn "No INCLUDE_EMPTY_SECTIONS in .docgen - assumed 'no'\n";
+	$options->{'INCLUDE_EMPTY_SECTIONS'} = 'no';
+    }else{
+	if ($options->{'INCLUDE_EMPTY_SECTIONS'} !~ /([Nn][Oo])|([Yy][Ee][Ss])/){die "invalid value of INCLUDE_EMPTY_SECTIONS in .docgen\n"}
+    }
+    if ($options->{'OUTPUT_DIR'} eq ""){
+	$options->{'OUTPUT_DIR'} = getcwd();
+        warn "No OUTPUT_DIR in .docgen - assumed $options->{'OUTPUT_DIR'}\n";
+    }else{
+	$options->{'OUTPUT_DIR'} = abs_path($options->{'OUTPUT_DIR'});
+
+        
+    }
+    $options->{'OUTPUT_DIR'} =~ s/([\/])$//;
+    if ($options->{'BRIEF_LENGTH'} eq ""){
+	$options->{'BRIEF_LENGTH'} = "60";
+        warn "No BRIEF_LENGTH in .docgen - assumed $options->{'BRIEF_LENGTH'}\n";
+    }else{
+	if ($options->{'BRIEF_LENGTH'} !~ /^[\d]+$/) {($options->{'BRIEF_LENGTH'}) = "60";}
+    }
+    return
+}
+
+sub format_INPUT{
+    my $input = shift(@_);
+    $input =~ s/[.]/\\\1./g;
+    $input =~ s/[*]/.*/g;
+    $input =~ s/(.*)/^\1\$/;
+    return $input;
+}
+
+sub create_sections_entity{
+    my $dochash = shift(@_);
+    my $sectionhash = {};
+    foreach (@{$dochash->{'FILES'}}){
+        my $filehash = $_;
+	my $section_name = $filehash->{'SECTION'}->{'NAME'};
+	$sectionhash->{"$section_name"} = [] if(!defined($sectionhash->{"$section_name"}));
+	foreach(@{$filehash->{'DOCS'}}){
+            my $prochash = $_;
+	    my $proc_section_name = $prochash->{'SECTION'}->{'NAME'};
+	    $proc_section_name = $section_name if(!defined($proc_section_name));
+	    $sectionhash->{"$proc_section_name"} = [] if(!defined($sectionhash->{"$proc_section_name"}));
+	    push(@{$sectionhash->{"$proc_section_name"}}, $prochash);
+	}
+    }
+    $dochash->{'SECTIONS_LIST'} = $sectionhash;
+    return 1;
+}
+
+
+sub format_description_string{
+    return ucfirst $_[0];
+}
