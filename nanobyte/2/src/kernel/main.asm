@@ -33,11 +33,9 @@ puts:
 
 ; Main program
 main:
-    hlt               ; Halt the CPU (this is a basic halt, but before that, set up the environment)
     mov ax, 0         ; Set AX register to 0 (initialize)
     mov ds, ax        ; Set the Data Segment (DS) register to 0 (point to 0x0000)
     mov es, ax        ; Set the Extra Segment (ES) register to 0 (point to 0x0000)
-
     mov ss, ax        ; Set the Stack Segment (SS) register to 0 (point to 0x0000)
     mov sp, 0x7C00    ; Set the Stack Pointer (SP) to 0x7C00 (top of the boot sector)
 

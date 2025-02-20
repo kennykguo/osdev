@@ -3,23 +3,20 @@
 ; and interaction with BIOS interrupts
 
 ; Origin and Bit Mode Configuration
-org 0x7C00        ; Set the memory origin to 0x7C00 
-                  ; This is the standard memory address where BIOS loads the first sector of a bootable device
-                  ; Ensures that all memory references are relative to this address
+; Set the memory origin to 0x7C00 -> this is where the bootloader is loaded into RAM
+org 0x7C00        
+; This is the standard memory address where BIOS loads the first sector of a bootable device
+; Ensures that all memory references are relative to this address
 
-bits  16          ; Specify 16-bit real mode 
-                  ; x86 systems start in 16-bit mode when booting
-                  ; This mode allows direct hardware access and compatibility with older systems
+; Specify 16-bit real mode 
+; x86 systems start in 16-bit mode when booting
+; This mode allows direct hardware access and compatibility with older systems
+bits  16
 
 ; Preprocessor Macro for End of Line
 %define ENDL 0x0D, 0x0A  ; Define a macro for end-of-line (newline)
-                         ; 0x0D is carriage return, 0x0A is line feed
-                         ; Used to create cross-platform compatible line breaks
-
-;
 ; FAT12 File System Boot Block Header
 ; These fields are required by the FAT12 file system specification
-;
 jmp short start   ; Short jump to skip over the header 
                   ; Ensures that the header data isn't interpreted as executable code
 nop               ; No operation - used for alignment and compatibility with some BIOSes
@@ -31,11 +28,11 @@ bdb_oem: db 'MSWIN4.1'  ; OEM identifier (8 bytes)
 ; Disk geometry and file system parameters
 dbd_bytes_per_sector: dw 512     ; Number of bytes in each sector (standard for most floppies/early hard drives)
 bdb_sectors_per_cluster: db 1    ; Number of sectors per allocation unit
-bdb_reserved_sectors: dw 1       ; Number of reserved sectors (boot sector is typically reserved)
+bdb_reserved_sectors: dw 1       ; Number of reserved sectors (boot sector is reserved)
 bdb_fat_count: db 2              ; Number of File Allocation Tables (FAT) on the disk
 bdb_dir_entries_count: dw 0E0h   ; Maximum number of directory entries in the root directory
 bdb_total_sectors: dw 2880       ; Total number of sectors on the disk (for a standard 1.44MB floppy)
-bdb_media_descriptor_type: db 0F0h  ; Media type identifier (0xF0 typically represents a removable media)
+bdb_media_descriptor_type: db 0F0h  ; Media type identifier (0xF0 represents a removable media)
 bdb_sectors_per_fat: dw 9        ; Number of sectors occupied by one FAT
 bdb_sectors_per_track: dw 18     ; Number of sectors per track
 bdb_heads: dw 2                  ; Number of read/write heads
@@ -82,34 +79,25 @@ puts:
     pop si        ; Restore registers to their original state
     ret           ; Return from the function
 
-; Main Program Initialization
+
 main:
-    ; Initialize segment registers
-    mov ax, 0     ; Load 0 into accumulator
-    mov ds, ax    ; Set Data Segment to 0
-    mov es, ax    ; Set Extra Segment to 0
-                  ; These ensure we're working with a clean, predictable memory state
+    mov ax, 0     ; Set up segment registers
+    mov ds, ax    
+    mov es, ax    
+    mov ss, ax    
+    mov sp, 0x7C00 ; Stack starts at the end of the bootloader
 
-    mov ss, ax    ; Set Stack Segment to 0
-    mov sp, 0x7C00 ; Set Stack Pointer to the top of the boot sector
-                   ; This creates a stack in a safe, known location
+    mov ax, 1     ; LBA sector to read
+    mov bx, 0x7E00 ; Load sector at memory address 0x7E00
+    mov cl, 1     ; Read one sector
+    mov [ebr_drive_number], dl  ; Store boot drive number
+    call disk_read  ; Read the sector
 
-    ; Store the drive number passed by BIOS
-    mov [ebr_drive_number], dl  ; DL contains the boot drive number
+    mov si, msg_hello  ; Load address of "Hello World" message
+    call puts         ; Print message
 
-    ; Attempt to read a sector from the disk
-    mov ax, 1     ; LBA (Logical Block Address) of the sector to read
-    mov cl, 1     ; Number of sectors to read
-    mov bx, 0x7E00 ; Memory address to store the read data (just after boot sector)
-    call disk_read ; Call disk read routine
-
-    ; Display welcome message
-    mov si, msg_hello ; Load address of hello message into source index
-    call puts         ; Call puts to display the message
-
-    ; Halt the system
-    cli             ; Clear interrupt flag (disable interrupts)
-    hlt             ; Halt the CPU
+    cli            ; Disable interrupts
+    hlt            ; Halt execution
 
 ; Error Handling: Floppy Disk Read Failure
 floppy_error:
@@ -127,69 +115,89 @@ wait_key_and_reboot:
     cli            ; Clear interrupts
     hlt            ; Halt CPU (final fallback)
 
+
+; C = LBA ÷ (HPC × SPT)
+; H = (LBA ÷ SPT) mod HPC
+; S = (LBA mod SPT) + 1
+; C, H and S are the cylinder number, the head number, and the sector number
+; LBA is the logical block address
+; HPC is the maximum number of heads per cylinder (reported by disk drive, typically 16 for 28-bit LBA)
+; SPT is the maximum number of sectors per track (reported by disk drive, typically 63 for 28-bit LBA)
 ; Convert Logical Block Address (LBA) to CHS (Cylinder-Head-Sector)
 ; This is necessary because older disk systems use CHS addressing
 lba_to_chs:
-    push ax
-    push dx
+    push ax       ; Save LBA value in AX (LBA will be used for calculations)
+    push dx       ; Save DX register (which will be modified during the divisions)
+    xor dx, dx    ; Clear DX (it will store remainders in later division steps)
+    
+    ; Step 1: Calculate the sector number (1-based)
+    div word [bdb_sectors_per_track]  ; AX = LBA / sectors_per_track, DX = LBA % sectors_per_track
+    
+    inc dx        ; Increment DX to make sector 1-based (sectors start from 1, not 0)
+    mov cx, dx    ; Store the sector number in CX (CX will hold the final result for sector)
+    
+    xor dx, dx    ; Clear DX again for the next calculation
 
-    xor dx, dx     ; Clear dx for division
-    div word [bdb_sectors_per_track]  ; Divide LBA by sectors per track
+    ; Step 2: Calculate the head number (part of the cylinder, within the cylinder's tracks)
+    div word [bdb_heads]  ; AX = Cylinder number, DX = Head (LBA / SPT) % heads
+    ; Explanation:
+    ; Now we divide the quotient from the previous division (AX) by `bdb_heads` (2). 
+    ; This gives us the head number. AX will contain the cylinder number, and DX (now in DL) will hold the head number.
+    mov dh, dl    ; Move the head number (from DL) into DH (part of the result)
+    ; The head number is stored in DL, but we need to place it in DH because we are going to pack the result into CX and DH.
 
-    inc dx         ; Increment to get sector number (1-based)
-    mov cx, dx     ; Store sector number in cx
+    ; Step 3: Calculate the cylinder number
+    mov ch, al    ; Move the low byte of the cylinder number into CH (AX contains the cylinder now)
+    shl ah, 6     ; Shift the high byte of the cylinder into the correct position (shift left by 6 bits)
+    or cl, ah     ; Combine the high 2 bits of the cylinder (in AH) with the sector number (in CL)
+    ; Cylinder is stored in AX after dividing by `bdb_heads`. 
+    ; The lower 8 bits of the cylinder are placed in CH (low byte of cylinder), and the higher 2 bits of the cylinder are moved into CL, combining it with the sector number.
+    ; Final Result:
+    ; - CX will contain the combined cylinder and sector (in a packed form).
+    ; - DH contains the head number.
+    
+    pop ax        ; Restore the original LBA value back into AX
+    pop dx        ; Restore the original DX register
+    ret           ; Return from the function
 
-    xor dx, dx     ; Clear dx again for next division
-    div word [bdb_heads]  ; Divide by number of heads
-
-    mov dh, dl     ; Head number
-    mov ch, al     ; Cylinder number
-    shl ah, 6      ; Shift high bits of cylinder to correct position
-    or cl, ah      ; Combine cylinder and sector information
-
-    pop ax
-    mov dl, al     ; Restore drive number
-    pop ax
-    ret
-
-; Read sectors from disk
 disk_read:
-    push ax
-    push bx
-    push cx
-    push dx
-    push di
+    push ax       ; Save LBA sector number (AX will contain the LBA of the sector to read)
+    push bx       ; Save memory address for read (BX contains the destination buffer address)
+    push cx       ; Save CX (sector number)
+    push dx       ; Save DX (used for LBA-to-CHS calculation)
+    push di       ; Save DI (for retry counter)
 
-    push cx
-    call lba_to_chs  ; Convert LBA to CHS addressing
-    pop ax
-
-    mov ah, 02h      ; BIOS function for disk read
-    mov di, 3        ; Number of read attempt retries
+    push cx       ; Save sector count (for later usage)
+    call lba_to_chs  ; Convert LBA to CHS (Cylinder, Head, Sector)
+    ; After the function call, the CHS values are packed in CX, and the head number is in DH.
+    
+    pop ax        ; Restore sector count (likely expected in AX after LBA-to-CHS conversion)
+    
+    mov ah, 0x02  ; BIOS read function (0x02 is BIOS function to read sectors)
+    mov di, 3     ; Retry counter initialized to 3 (attempt to retry 3 times in case of failure)
 
 .retry:
-    pusha            ; Save all registers
-    stc              ; Set carry flag (required for some BIOS versions)
-    int 13h          ; Call BIOS disk interrupt
-    jnc .done        ; If read successful (carry not set), exit
+    pusha         ; Save all registers before BIOS call (necessary for proper register preservation)
+    stc           ; Set carry flag (required for some BIOS versions to indicate a read operation)
+    int 13h       ; Call BIOS disk interrupt (interrupt 13h reads from disk)
+    jnc .done     ; If no error (Carry flag not set), jump to done
 
-    popa             ; Restore registers
-    call disk_reset  ; Reset disk controller
-
-    dec di           ; Decrement retry counter
-    test di, di      ; Check if we've exhausted retries
-    jnz .retry       ; If retries remain, try again
+    popa          ; Restore registers if failed
+    call disk_reset ; Reset disk controller if read failed
+    dec di        ; Decrement retry counter
+    test di, di   ; Test if retries remain
+    jnz .retry    ; If retries remain, retry reading from disk
 
 .fail:
-    jmp floppy_error ; Jump to error handling if all retries fail
+    jmp floppy_error  ; If all retries fail, jump to error handler
 
 .done:
-    popa             ; Restore registers
-    pop di
-    pop dx
-    pop cx
-    pop bx
-    pop ax
+    popa          
+    pop di        
+    pop dx        
+    pop cx        
+    pop bx        
+    pop ax        
     ret
 
 ; Reset Disk Controller
@@ -197,10 +205,11 @@ disk_reset:
     pusha            ; Save all registers
     mov ah, 0        ; BIOS function to reset disk system
     stc              ; Set carry flag
-    int 13h          ; Call disk interrupt
-    jc floppy_error  ; If reset fails, jump to error handler
+    int 13h          ; Call BIOS disk interrupt
+    jc floppy_error  ; If reset fails (Carry flag set), jump to error handler
     popa             ; Restore registers
     ret
+
 
 ; Message Strings
 msg_hello: 
